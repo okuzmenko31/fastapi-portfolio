@@ -1,0 +1,231 @@
+* {
+    font-family: sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.zones {
+    height: 100%;
+    width: 80%;
+    background-color: white;
+}
+ /*Navbar*/
+.navbar {
+    width: 100%;
+    height: 150px;
+    background-color: whitesmoke;
+    border-bottom: 2px lightgray solid;
+}
+/*SideBars*/
+.sidebars {
+    display: flex;
+    justify-content: space-between;
+    height: 83.7%;
+    width: 100%;
+}
+
+.left-s {
+    height: 100%;
+    width: 200px;
+    background-color: whitesmoke;
+    border-right: 2px lightgray solid;
+}
+
+.right-s {
+    height: 100%;
+    width: 200px;
+    background-color: whitesmoke;
+    border-left: 2px lightgray solid;
+}
+/*Main*/
+.main {
+    width: 70%;
+    height: 100%;
+    overflow: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+/*Item*/
+.item {
+    width: 300px;
+    height: 400px;
+    background-color: whitesmoke;
+    border: 5px lightgray solid;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+@keyframes changing {
+    from {
+        opacity: 0;
+    }
+
+    25% {
+        content: url("imgs/iphone14.png");
+        opacity: 100%;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    75% {
+        content: url("imgs/iphone14_1.png");
+        opacity: 100%;
+    }
+
+    to {
+        opacity: 0%;
+    }
+}
+
+.item-img {
+    width: 150px;
+    height: 150px;
+    content: url("imgs/iphone14.png");;
+    animation: changing 5s infinite ease-in-out;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.price-and-button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buy-button {
+    width: 50px;
+    height: 50px;
+    margin-right: 50px;
+    background-color: white;
+    border: limegreen 5px solid;
+    border-radius: 100%;
+    transition: 0.3s;
+}
+
+.buy-button img {
+    width: 30px;
+    content: url("icons/addToBuyList_static.png");
+}
+
+.buy-button img:hover {
+    content: url("icons/addToBuyList.gif");
+}
+
+.buy-button:hover {
+    scale: 110%;
+    background-color: limegreen;
+}
+
+.Price {
+    font-weight: bold;
+}
+
+/*Ad*/
+
+.ad {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 310px;
+    height: 410px;
+}
+
+.ad-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+/*Filters*/
+
+.filters {
+    list-style: none;
+}
+
+.form-control {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    border: 2px gray solid;
+    background-color: #eee;
+    transition: 0.3s;
+}
+
+.form-control:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.form-control input:checked ~ .checkmark {
+    background-color: lawngreen;
+    border: 2px green solid;
+}
+
+.form-control:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.form-control input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.form-control .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
