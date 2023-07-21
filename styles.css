@@ -94,7 +94,7 @@ body {
     }
 
     to {
-        opacity: 0%;
+        opacity: 0;
     }
 }
 
@@ -228,4 +228,27 @@ input[type="checkbox"] {
     border-width: 0 3px 3px 0;
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+}
+
+.button-div {
+    position: absolute;
+    width: 100px;
+    display: flex;
+    justify-content: end;
+}
+
+.clear-filters {
+    background-color: whitesmoke;
+    color: black;
+    border-radius: 6px;
+    border: 2px indianred solid;
+    width: 25px;
+    height: 25px;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.clear-filters:hover {
+    color: white;
+    background-color: indianred;
 }
