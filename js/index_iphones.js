@@ -21,7 +21,7 @@ function filterItems() {
         if (checkbox.checked) {
             const label = checkbox.parentNode;
             const labelText = label.textContent.trim();
-            //if checkbox is checked we are cheking
+            //if checkbox is checked we are checking
             // for datatype and then adding our item to arrays.
             // If it's memory we are adding filter to selectedMemory
             // and if it's model we are adding filter to selectedModels
@@ -30,13 +30,12 @@ function filterItems() {
             } else if (checkbox.dataset.type === "memory") {
                 selectedMemory.push(labelText);
             }
-        }
-    });
+        }})
 
     items.forEach(item => {
         const itemName = item.querySelector(".model").textContent;
         const itemMemory = item.querySelector(".memory").textContent;
-        let showItem = true; // Предполагаем, что элемент должен быть показан
+        let showItem = true;
         //here is filter logic
         if (selectedModels.length > 0 && !selectedModels.includes(itemName) && !selectedModels.some(model => itemName.startsWith(model))) {
             showItem = false;

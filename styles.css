@@ -136,6 +136,10 @@ body {
     box-shadow: 0 0 10px limegreen;
 }
 
+.menu li a {
+    color: #9fa5b5;
+}
+
 .active {
     background: lightgray;
 }
