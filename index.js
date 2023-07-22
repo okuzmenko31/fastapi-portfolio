@@ -53,7 +53,7 @@ function filterItems() {
     });
 }
 
-//calling function when checbox is checked or unchecked
+//calling function when checkbox is checked or unchecked
 inputCheckBoxes.forEach(checkbox => {
     checkbox.addEventListener("change", filterItems);
 });

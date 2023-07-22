@@ -27,6 +27,32 @@ body {
     height: 150px;
     background-color: whitesmoke;
     border-bottom: 2px lightgray solid;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.navbar a {
+    text-decoration: none;
+    display: inline-block;
+    width: 170px;
+}
+
+.logo {
+    font-family: Bradley Hand, cursive, serif;
+    font-size: 60px;
+    background-image: -webkit-linear-gradient(#f481c6, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-position: top left;
+    transition: 0.3s;
+}
+
+.logo:hover {
+    scale: 110%;
+    background-image: -webkit-linear-gradient(#f481c6, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 /*SideBar*/
 .sidebar {
@@ -248,7 +274,7 @@ input[type="checkbox"] {
     color: white;
     background-color: indianred;
 }
-
+/*Hidden*/
 .hidden {
     display: none;
 }
