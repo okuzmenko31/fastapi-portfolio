@@ -248,3 +248,7 @@ input[type="checkbox"] {
     color: white;
     background-color: indianred;
 }
+
+.hidden {
+    display: none;
+}
