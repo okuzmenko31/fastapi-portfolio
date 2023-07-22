@@ -58,7 +58,7 @@ body {
 .sidebar {
     display: flex;
     justify-content: space-between;
-    height: 83.7%;
+    height: 100%;
     width: 100%;
 }
 
@@ -67,6 +67,102 @@ body {
     width: 400px;
     background-color: whitesmoke;
     border-right: 2px lightgray solid;
+    overflow: scroll;
+}
+
+/*Filters*/
+
+.filters {
+    list-style: none;
+    position: relative;
+}
+
+.form-control {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    border: 2px gray solid;
+    background-color: #eee;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.form-control:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.form-control input:checked ~ .checkmark {
+    background-color: lawngreen;
+    border: 2px green solid;
+}
+
+.form-control:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.form-control input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.form-control .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.button-div {
+    position: absolute;
+    transform: translate(0, 0);
+    width: 100px;
+    display: flex;
+    justify-content: end;
+}
+
+.clear-filters {
+    background-color: whitesmoke;
+    color: black;
+    border-radius: 6px;
+    border: 2px indianred solid;
+    width: 25px;
+    height: 25px;
+    transition: 0.3s;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.clear-filters:hover {
+    color: white;
+    background-color: indianred;
 }
 /*Main*/
 .main {
@@ -180,99 +276,6 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 10px;
-}
-
-/*Filters*/
-
-.filters {
-    list-style: none;
-}
-
-.form-control {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 22px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-
-.checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    border: 2px gray solid;
-    background-color: #eee;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.form-control:hover input ~ .checkmark {
-    background-color: #ccc;
-}
-
-.form-control input:checked ~ .checkmark {
-    background-color: lawngreen;
-    border: 2px green solid;
-}
-
-.form-control:after {
-    content: "";
-    position: absolute;
-    display: none;
-}
-
-.form-control input:checked ~ .checkmark:after {
-    display: block;
-}
-
-.form-control .checkmark:after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-
-.button-div {
-    position: absolute;
-    width: 100px;
-    display: flex;
-    justify-content: end;
-}
-
-.clear-filters {
-    background-color: whitesmoke;
-    color: black;
-    border-radius: 6px;
-    border: 2px indianred solid;
-    width: 25px;
-    height: 25px;
-    transition: 0.3s;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.clear-filters:hover {
-    color: white;
-    background-color: indianred;
 }
 /*Hidden*/
 .hidden {
