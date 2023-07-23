@@ -40,20 +40,12 @@ body {
 }
 
 .logo {
-    font-family: Bradley Hand, cursive, serif;
-    font-size: 60px;
-    background-image: -webkit-linear-gradient(#f481c6, #333);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-position: top left;
+    width: 100px;
     transition: 0.3s;
 }
 
 .logo:hover {
     scale: 110%;
-    background-image: -webkit-linear-gradient(#f481c6, #333);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .dropdown {
@@ -370,6 +362,40 @@ input[type="checkbox"] {
     width: 100%;
     height: 100%;
     border-radius: 10px;
+}
+/*Footer*/
+.footer {
+    width: 100%;
+    height: 150px;
+    background: whitesmoke;
+    border-top: 2px solid lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contacts {
+    list-style: none;
+    color: rgba(150, 150, 150, 0.5);
+    transition: 0.2s;
+}
+
+.contacts:hover {
+    color: rgba(0, 0, 0, 1);
+}
+
+
+.geo-info {
+    margin-left: 50px;
+    font-weight: normal;
+    list-style: none;
+    color: rgba(150, 150, 150, 0.5);
+    transition: 0.2s;
+}
+
+.geo-info:hover {
+    color: rgba(0, 0, 0, 1);
+    opacity: 100%
 }
 /*Hidden*/
 .hidden {
