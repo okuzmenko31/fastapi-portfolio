@@ -266,44 +266,16 @@ input[type="checkbox"] {
     background-color: whitesmoke;
     border: 5px lightgray solid;
     border-radius: 10px;
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-@keyframes changing {
-    from {
-        opacity: 0;
-    }
-
-    25% {
-        content: url("imgs/iphone14.png");
-        opacity: 100%;
-    }
-
-    50% {
-        opacity: 0;
-    }
-
-    75% {
-        content: url("imgs/iphone14_1.png");
-        opacity: 100%;
-    }
-
-    to {
-        opacity: 0;
-    }
-}
-
 .item-img {
     width: 150px;
-    height: 150px;
-    content: url("imgs/iphone14.png");;
-    animation: changing 5s infinite ease-in-out;
+    max-height: 150px;
 }
 
 .item-info {
