@@ -232,6 +232,7 @@ input[type="checkbox"] {
     width: 100px;
     display: flex;
     justify-content: end;
+    margin-left: 20px;
 }
 
 .clear-filters {

@@ -1,7 +1,103 @@
 const items = document.querySelectorAll(".item");
-const clearFiltersButton = document.querySelector(".clear-filters");
-const inputCheckBoxes = document.querySelectorAll(".checkbox-basic");
 const dropdowns = document.querySelectorAll(".dropdown");
+const filtersContainer = document.querySelector(".filters");
+
+const phoneModels = [];
+const phoneMemory = [];
+
+//Generating items with js. So if we will add new items it will also check available filters if it will be new we will create new filters
+
+function generateItems() {
+    const modelContainer = document.createElement("div");
+    const memoryContainer = document.createElement("div");
+
+    let modelsCategoryAdded = false; // Флаг, который отслеживает, была ли уже добавлена категория "Models"
+    let memoryCategoryAdded = false; // Флаг, который отслеживает, была ли уже добавлена категория "Memory"
+
+    items.forEach(item => {
+        const modelName = item.querySelector("h4").innerHTML;
+        const memoryName = item.querySelector("h5").innerHTML;
+
+        if (!phoneModels.includes(modelName)) {
+            phoneModels.push(modelName);
+
+            if (!modelsCategoryAdded) {
+                const h3 = document.createElement("h3");
+                h3.innerHTML = "Models";
+
+                modelContainer.appendChild(h3);
+                modelsCategoryAdded = true;
+            }
+
+            const li = document.createElement("li");
+            li.classList.add("model_");
+
+            const label = document.createElement("label");
+            const input_checkbox = document.createElement("input");
+            const span_checkbox = document.createElement("span");
+
+            label.classList.add("form-control");
+            label.innerHTML = modelName;
+            input_checkbox.classList.add("checkbox-basic");
+            input_checkbox.type = "checkbox";
+            input_checkbox.dataset.type = "name";
+            input_checkbox.name = modelName;
+            input_checkbox.addEventListener("change", filterItems);
+            span_checkbox.classList.add("checkmark");
+
+            label.append(input_checkbox, span_checkbox);
+            li.appendChild(label);
+
+            modelContainer.appendChild(li);
+        }
+
+        if (!phoneMemory.includes(memoryName)) {
+            phoneMemory.push(memoryName);
+
+            if (!memoryCategoryAdded) {
+                const h3 = document.createElement("h3");
+                h3.innerHTML = "Memory";
+
+                memoryContainer.appendChild(h3);
+                memoryCategoryAdded = true;
+            }
+
+            const li = document.createElement("li");
+            li.classList.add("memory_");
+
+            const label = document.createElement("label");
+            const input_checkbox = document.createElement("input");
+            const span_checkbox = document.createElement("span");
+
+            label.classList.add("form-control");
+            label.innerHTML = memoryName;
+            input_checkbox.classList.add("checkbox-basic");
+            input_checkbox.type = "checkbox";
+            input_checkbox.dataset.type = "memory";
+            input_checkbox.name = memoryName;
+            input_checkbox.addEventListener("change", filterItems);
+            span_checkbox.classList.add("checkmark");
+
+            label.append(input_checkbox, span_checkbox);
+            li.appendChild(label);
+
+            memoryContainer.appendChild(li);
+        }
+    });
+
+    // Добавляем контейнеры сгруппированных элементов на страницу
+    filtersContainer.appendChild(modelContainer);
+    filtersContainer.appendChild(memoryContainer);
+}
+
+generateItems();
+
+const clearFiltersButton = document.querySelector(".clear-filters");
+const inputCheckBoxes = document.querySelectorAll(".checkbox-basic")
+
+setTimeout(() => {
+}, 1)
+
 
 //clearing filters
 clearFiltersButton.addEventListener("click", () => {
