@@ -1,0 +1,208 @@
+@font-face {
+    font-family: "HarmonyOS Sans";
+    src: url("https://db.onlinewebfonts.com/t/876476f9c21d688286b0ec4bf47013a7.eot");
+    src: url("https://db.onlinewebfonts.com/t/876476f9c21d688286b0ec4bf47013a7.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/876476f9c21d688286b0ec4bf47013a7.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/876476f9c21d688286b0ec4bf47013a7.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/876476f9c21d688286b0ec4bf47013a7.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/876476f9c21d688286b0ec4bf47013a7.svg#HarmonyOS Sans")format("svg");
+}
+
+* {
+    font-family: HarmonyOS Sans, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+.App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar {
+    position: fixed;
+    box-sizing: border-box;
+    padding-left: 100px;
+    padding-right: 200px;
+    width: 100%;
+    height: 60px;
+    background-color: white;
+    top: 0;
+    box-shadow: lightgray 2px 2px 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1030;
+}
+
+.block-1 {
+    width: 80%;
+    height: 1000px;
+    display: flex;
+    justify-content: center;
+    gap: 200px;
+}
+
+.block-1-info {
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #60a5fa, #a855f7);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+@keyframes wave {
+    0% {
+        rotate: 0deg;
+    }
+
+    5% {
+        rotate: 15deg;
+    }
+
+    10% {
+        rotate: 30deg;
+    }
+
+    15% {
+        rotate: 15deg;
+    }
+
+    20% {
+        rotate: 0deg;
+    }
+
+    25% {
+        rotate: -15deg;
+    }
+
+    30% {
+        rotate: -30deg;
+    }
+
+    35% {
+        rotate: -15deg;
+    }
+
+    40% {
+        rotate: 0deg;
+    }
+
+    45% {
+        rotate: 15deg;
+    }
+
+    50% {
+        rotate: 30deg;
+    }
+
+    55% {
+        rotate: 15deg;
+    }
+
+    60% {
+        rotate: 0deg;
+    }
+
+    100% {
+        rotate: 0deg;
+    }
+}
+
+.animated-hand {
+    font-size: 60px;
+    animation: wave 2s infinite;
+}
+
+.no-margin-to-bottom {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/*.navbar-button {*/
+/*    position: relative;*/
+/*    font-size: 40px;*/
+/*    color: #333;*/
+/*    font-weight: 600;*/
+/*    text-decoration: none;*/
+/*}*/
+.navbar-button {
+    position: relative;
+    font-weight: 600;
+    margin-left: 20px;
+    color: black;
+    text-decoration: none;
+}
+
+.navbar-button:before {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    height: 6px;
+    width: 0;
+    background: mediumpurple;
+    border-radius: 50px;
+    z-index: 2000;
+    transition: 0.2s linear;
+}
+
+.navbar-button:hover:before {
+    width: 100%;
+}
+
+.logo {
+    font-size: 50px;
+    font-weight: 1000;
+    text-decoration: none;
+    background: linear-gradient(to right, #60a5fa, #a855f7);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.TypeText {
+    width: 700px;
+    position: relative;
+    color: #60a5fa;
+    font-size: 70px;
+    font-weight: 600;
+}
+
+@keyframes text-anim {
+    40%, 60% {
+        left: 100%;
+    }
+
+    100% {
+        left: 0;
+    }
+}
+
+.TypeText:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    border-left: 2px solid #60a5fa;
+    animation: text-anim 4s steps(12) infinite;
+}
+
