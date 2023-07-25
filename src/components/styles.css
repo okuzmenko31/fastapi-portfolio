@@ -34,8 +34,8 @@ body {
 .navbar {
     position: fixed;
     box-sizing: border-box;
-    padding-left: 100px;
-    padding-right: 200px;
+    padding-left: 300px;
+    padding-right: 300px;
     width: 100%;
     height: 60px;
     background-color: white;
@@ -177,32 +177,9 @@ body {
 }
 
 .TypeText {
-    width: 700px;
+    width: 800px;
     position: relative;
     color: #60a5fa;
-    font-size: 70px;
+    font-size: 60px;
     font-weight: 600;
 }
-
-@keyframes text-anim {
-    40%, 60% {
-        left: 100%;
-    }
-
-    100% {
-        left: 0;
-    }
-}
-
-.TypeText:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: white;
-    border-left: 2px solid #60a5fa;
-    animation: text-anim 4s steps(12) infinite;
-}
-

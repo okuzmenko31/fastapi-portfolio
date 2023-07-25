@@ -1,23 +1,7 @@
 import classes from "./components/styles.css";
-import React, { useState, useEffect } from "react";
+import React from "react";
+import TypeWriterJS from "./typewritter";
 function App() {
-    const textArray = ['Freelancer', 'BackEnd Developer', 'Crypto enthusiast'];
-    const [index, setIndex] = useState(0);
-    const [text, setText] = useState(textArray[index]);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIndex((prevIndex) => (prevIndex + 1) % textArray.length);
-        }, 4000);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [index]);
-
-    useEffect(() => {
-        setText(textArray[index]);
-    }, [index, textArray]);
 
   return (
     <div className="App">
@@ -40,8 +24,8 @@ function App() {
                 </div>
 
                 <h1 style={{fontSize:"60px", fontWeight:"bold"}} className="no-margin-to-bottom">I am <span className="gradient-text">Oleg Kuzmenko!</span></h1>
-                <h3 style={{fontSize:"35px"}}>Python BackEnd Developer</h3>
-                <span className="TypeText">{text}</span>
+                <h3 style={{fontSize:"35px"}}>Python Back-End Developer</h3>
+                <TypeWriterJS className="TypeText"></TypeWriterJS>
             </div>
             <img alt="man is sitting in front of PC" style={{width:"300px"}} src="https://soumyajit.vercel.app/static/media/home-main.541f8179af8209ce03ccf2178fe62dbf.svg"/>
         </div>
