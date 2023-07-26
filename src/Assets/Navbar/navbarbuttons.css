@@ -1,15 +1,15 @@
 .navbar-button:before {
     content: "";
     position: absolute;
-    bottom: -2px;
+    bottom: -6px;
     height: 6px;
-    width: 100px;
+    width: 0;
     background: mediumpurple;
     border-radius: 50px;
-    transform: scaleX(0);
+    z-index: 2000;
     transition: 0.2s linear;
 }
 
 .navbar-button:hover:before {
-    transform: scaleX(1);
+    width: 100%;
 }

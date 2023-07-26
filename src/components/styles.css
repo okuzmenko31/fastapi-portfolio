@@ -18,7 +18,7 @@ body {
     width: 100%;
     height: 100%;
     margin: 0;
-    overflow: hidden;
+    padding: 0;
 }
 
 #root {
@@ -27,110 +27,11 @@ body {
 }
 
 .App {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.navbar {
-    position: fixed;
-    box-sizing: border-box;
-    padding-left: 300px;
-    padding-right: 300px;
     width: 100%;
-    height: 60px;
-    background-color: white;
-    top: 0;
-    box-shadow: lightgray 2px 2px 2px;
+    height: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    z-index: 1030;
-}
-
-.block-1 {
-    width: 80%;
-    height: 1000px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 200px;
-}
-
-.block-1-info {
-    width: 800px;
-    display: flex;
-    justify-content: center;
     flex-direction: column;
-}
-
-.gradient-text {
-    background: linear-gradient(to right, #60a5fa, #a855f7);
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
-}
-
-@keyframes wave {
-    0% {
-        rotate: 0deg;
-    }
-
-    5% {
-        rotate: 15deg;
-    }
-
-    10% {
-        rotate: 30deg;
-    }
-
-    15% {
-        rotate: 15deg;
-    }
-
-    20% {
-        rotate: 0deg;
-    }
-
-    25% {
-        rotate: -15deg;
-    }
-
-    30% {
-        rotate: -30deg;
-    }
-
-    35% {
-        rotate: -15deg;
-    }
-
-    40% {
-        rotate: 0deg;
-    }
-
-    45% {
-        rotate: 15deg;
-    }
-
-    50% {
-        rotate: 30deg;
-    }
-
-    55% {
-        rotate: 15deg;
-    }
-
-    60% {
-        rotate: 0deg;
-    }
-
-    100% {
-        rotate: 0deg;
-    }
-}
-
-.animated-hand {
-    font-size: 60px;
-    animation: wave 2s infinite;
 }
 
 .no-margin-to-bottom {
@@ -138,35 +39,12 @@ body {
     margin-bottom: 0;
 }
 
-/*.navbar-button {*/
-/*    position: relative;*/
-/*    font-size: 40px;*/
-/*    color: #333;*/
-/*    font-weight: 600;*/
-/*    text-decoration: none;*/
-/*}*/
 .navbar-button {
     position: relative;
     font-weight: 600;
     margin-left: 20px;
     color: black;
     text-decoration: none;
-}
-
-.navbar-button:before {
-    content: "";
-    position: absolute;
-    bottom: -6px;
-    height: 6px;
-    width: 0;
-    background: mediumpurple;
-    border-radius: 50px;
-    z-index: 2000;
-    transition: 0.2s linear;
-}
-
-.navbar-button:hover:before {
-    width: 100%;
 }
 
 .logo {
