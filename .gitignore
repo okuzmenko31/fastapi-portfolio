@@ -142,3 +142,6 @@ media
 # MAC
 .DS_Store
 *.DS_Store
+
+# SECRET FILES
+secret_phrase.json
