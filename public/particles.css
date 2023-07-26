@@ -8,13 +8,11 @@ canvas{
     vertical-align: bottom;
 }
 /* ---- particles.js container ---- */
-#particles-js{
-    position:absolute;
-    width: 100%;
+#particles-js {
     height: 100%;
-    background-color: #ffffff;
-    background-image: url("");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 50% 50%;
+    width: 100%;
+    position: fixed;
+    z-index: 0;
+    top:0;
+    left:0;
 }

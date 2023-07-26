@@ -4,7 +4,7 @@ import { AiFillGithub, AiFillLinkedin, AiFillTwitterCircle } from "react-icons/a
 
 const Footer = () => {
     return (
-        <div className="footer">
+        <footer className="footer">
             <div className="footer-content">
                 <div className="info-footer">
                     <h1>OLEG KUZMENKO</h1>
@@ -12,11 +12,22 @@ const Footer = () => {
                 </div>
 
                 <div className="socials-footer">
-                    <h1>SOCIALS</h1>
-                    <div className="icons-footer">
-                        <a className="link-style" target="_blank" href="https://github.com/okuzmenko31"><AiFillGithub /></a>
-                        <a className="link-style" target="_blank" href="#"><AiFillLinkedin /></a>
-                        <a className="link-style" target="_blank" href="#"><AiFillTwitterCircle /></a>
+                    <h1 style={{marginTop: "0", marginBottom: "0"}}>SOCIALS</h1>
+                    <div className="icons-footer-ok">
+                        <h5 style={{marginTop: "0", marginBottom: "0"}}>Oleg Kuzmenko</h5>
+                        <div className="icons-ft">
+                            <a className="link-style" target="_blank" href="#"><AiFillGithub /></a>
+                            <a className="link-style" target="_blank" href="#"><AiFillLinkedin /></a>
+                            <a className="link-style" target="_blank" href="#"><AiFillTwitterCircle /></a>
+                        </div>
+                    </div>
+                    <div className="icons-footer-vm">
+                        <h5 style={{marginTop: "0", marginBottom: "0"}}>Vladyslav Malyshenko</h5>
+                        <div className="icons-ft">
+                            <a className="link-style" target="_blank" href="#"><AiFillGithub /></a>
+                            <a className="link-style" target="_blank" href="#"><AiFillLinkedin /></a>
+                            <a className="link-style" target="_blank" href="#"><AiFillTwitterCircle /></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -26,7 +37,7 @@ const Footer = () => {
                 <h1>© Copyright 2023. Made by <a href="#" className="link-style"><span>Vladyslav Malyshenko</span></a> and <a href="#" className="link-style"><span>Oleg Kuzmenko</span></a></h1>
             </div>
 
-        </div>
+        </footer>
     );
 };
 

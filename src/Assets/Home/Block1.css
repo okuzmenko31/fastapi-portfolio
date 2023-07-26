@@ -1,6 +1,7 @@
 .block-1 {
+    margin-top: 200px;
     width: 80%;
-    height: 50%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

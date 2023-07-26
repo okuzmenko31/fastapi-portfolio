@@ -1,5 +1,5 @@
 import DefaultStyles from "./components/styles.css";
-import React, { ScrollView } from "react";
+import React from "react";
 import Navbar from "./Assets/Navbar/Navbar";
 import Block1 from "./Assets/Home/Block1";
 import Footer from "./Assets/Footer/Footer";
