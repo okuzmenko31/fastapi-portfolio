@@ -1,4 +1,5 @@
 import re
+import uuid
 
 from pydantic import BaseModel, EmailStr, field_validator
 from fastapi.exceptions import HTTPException
@@ -12,11 +13,16 @@ EN_LOWER_LETTERS_NUMBERS_PATTERN = re.compile(r"^(?=.*\d)[a-z\d]+$")
 
 class MainSchema(BaseModel):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserShow(MainSchema):
-    pass
+    id: uuid.UUID
+    username: str
+    email: str
+    is_active: bool
+    is_owner: bool
+    roles: list
 
 
 class UserCreate(BaseModel):
@@ -32,6 +38,7 @@ class UserCreate(BaseModel):
                 detail='The username must be in LOWER case and contain letter',
                 status_code=400
             )
+        return value
 
     @field_validator('password')
     def validate_password(cls, value):

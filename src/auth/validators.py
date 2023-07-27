@@ -14,19 +14,27 @@ class PasswordValidator:
 
     def check_lowercase(self):
         if not re.search("[a-z]", self.password):
-            return PasswordValidationData(error='Password must contain letters a-z!')
+            return PasswordValidationData(
+                error='Password must contain letters a-z!'
+            )
 
     def check_uppercase(self):
         if not re.search("[A-Z]", self.password):
-            return PasswordValidationData(error='Password must contain letters A-Z!')
+            return PasswordValidationData(
+                error='Password must contain letters A-Z!'
+            )
 
     def check_numbers(self):
         if not re.search("[0-9]", self.password):
-            return PasswordValidationData(error='Password must contain numbers 0-9!')
+            return PasswordValidationData(
+                error='Password must contain numbers 0-9!'
+            )
 
     def check_length(self):
         if len(self.password) < 9:
-            return PasswordValidationData(error='Password length must be more than 9 symbols!')
+            return PasswordValidationData(
+                error='Password length must be more than 9 symbols!'
+            )
 
     def check_all(self):
         check_lowercase = self.check_lowercase()
