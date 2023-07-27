@@ -35,7 +35,10 @@ async def create_user(
     token_manager: AuthTokenManager = managers['token_manager']
     token_manager.token_type = 'su'
     try:
-        user: UserShow = await user_manager.create_new_user(data)
+        as_owner = False
+        if data.secret_phrase is not None:
+            as_owner = True
+        user: UserShow = await user_manager.create_new_user(data, as_owner)
         await token_manager.send_tokenized_mail(
             url_main_part='/confirm_email_and_set_active/',
             email=user.email,

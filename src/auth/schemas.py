@@ -1,10 +1,12 @@
 import re
 import uuid
 
+from typing import Optional
+
 from pydantic import BaseModel, EmailStr, field_validator
 from fastapi.exceptions import HTTPException
 
-from src.settings.phrase import check_phrase_is_valid
+from src.auth.phrase import check_phrase_is_valid
 
 from .validators import validate_password
 
@@ -30,6 +32,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     password_confirmation: str
+    secret_phrase: Optional[str] = None
 
     @field_validator('username')
     def validate_username(cls, value: str):
@@ -49,10 +52,6 @@ class UserCreate(BaseModel):
                 status_code=400
             )
         return value
-
-
-class OwnerCreate(UserCreate):
-    secret_phrase: str
 
     @field_validator('secret_phrase')
     def validate_secret_phrase(cls, value: str):

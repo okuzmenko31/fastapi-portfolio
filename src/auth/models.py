@@ -42,6 +42,9 @@ class User(Base):
     def is_owner(self):
         return Roles.role_owner in self.roles
 
+    def add_owner_role(self):
+        self.roles.append(Roles.role_owner)
+
 
 class TokenChoicesTypes(types.TypeDecorator):
     impl = types.String
