@@ -1,6 +1,6 @@
 import React from 'react';
 import TypeWriterJS from "../../typewritter";
-import classes from "./Block1.css"
+import "./Block1.css"
 
 const Block1 = () => {
     return (

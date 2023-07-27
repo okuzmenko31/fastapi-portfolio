@@ -1,33 +1,22 @@
 import React from 'react';
-import classes from './Footer.css';
+import './Footer.css';
 import { AiFillGithub, AiFillLinkedin, AiFillTwitterCircle } from "react-icons/ai";
 
 const Footer = () => {
     return (
         <footer className="footer">
             <div className="footer-content">
-                <div className="info-footer">
-                    <h1>OLEG KUZMENKO</h1>
-                    <h5>Full-time python Back-End Developer</h5>
+                <div className="footer-headers">
+                    <h1 style={{margin:"0"}}>OLEG KUZMENKO</h1>
+                    <h1 style={{margin:"0"}}>SOCIALS</h1>
                 </div>
 
-                <div className="socials-footer">
-                    <h1 style={{marginTop: "0", marginBottom: "0"}}>SOCIALS</h1>
+                <div className="footer-headers-info">
+                    <h5 style={{color:"white"}}>Full-time python Back-End Developer</h5>
                     <div className="icons-footer-ok">
-                        <h5 style={{marginTop: "0", marginBottom: "0"}}>Oleg Kuzmenko</h5>
-                        <div className="icons-ft">
-                            <a className="link-style" target="_blank" href="#"><AiFillGithub /></a>
-                            <a className="link-style" target="_blank" href="#"><AiFillLinkedin /></a>
-                            <a className="link-style" target="_blank" href="#"><AiFillTwitterCircle /></a>
-                        </div>
-                    </div>
-                    <div className="icons-footer-vm">
-                        <h5 style={{marginTop: "0", marginBottom: "0"}}>Vladyslav Malyshenko</h5>
-                        <div className="icons-ft">
-                            <a className="link-style" target="_blank" href="#"><AiFillGithub /></a>
-                            <a className="link-style" target="_blank" href="#"><AiFillLinkedin /></a>
-                            <a className="link-style" target="_blank" href="#"><AiFillTwitterCircle /></a>
-                        </div>
+                        <a className="link-style" target="_blank" href="#"><AiFillGithub /></a>
+                        <a className="link-style" target="_blank" href="#"><AiFillLinkedin /></a>
+                        <a className="link-style" target="_blank" href="#"><AiFillTwitterCircle /></a>
                     </div>
                 </div>
             </div>
