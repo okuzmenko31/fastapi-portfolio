@@ -10,7 +10,10 @@ from src.settings.config import ACCESS_TOKEN_EXPIRE_MINUTES
 
 from .models import User
 
-from .services import UserManager, JWTTokenManager, get_active_user
+from .services import (UserManager,
+                       JWTTokenManager,
+                       get_active_user,
+                       get_current_user_token)
 from .token import AuthTokenManager
 from .schemas import UserCreate, UserShow, JWTTokenSchema, UserLogin
 
@@ -105,6 +108,17 @@ async def login_for_access_token(
         access_token=access_token,
         token_type='bearer'
     )
+
+
+@router.post('/logout/')
+async def logout(token: str = Depends(get_current_user_token),
+                 managers: dict = Depends(get_managers)):
+    manager: JWTTokenManager = managers['jwt_token_manager']
+    await manager.add_token_to_blacklist(token)
+    return {
+        'status_code': 200,
+        'detail': 'You successfully logged out!'
+    }
 
 
 @router.get("/me/", response_model=UserShow)

@@ -7,10 +7,9 @@ from fastapi.exceptions import HTTPException
 from jose import jwt, JWTError
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import exists
-from sqlalchemy import select
+from sqlalchemy import select, exists, insert
 
-from .models import User, Roles
+from .models import User, Roles, JWTTokensBlackList
 from .schemas import UserCreate, UserShow, JWTTokenData
 from .hashing import Hashing
 
@@ -170,6 +169,21 @@ class JWTTokenManager(UserManager):
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=JWT_ALGORITHM)
         return encoded_jwt
 
+    async def add_token_to_blacklist(self, token: str):
+        stmt = insert(JWTTokensBlackList).values(jwt_token=token)
+        async with self.session.begin():
+            await self.session.execute(stmt)
+            await self.session.commit()
+
+    async def token_in_blacklist(self, token: str):
+        query = exists(JWTTokensBlackList).where(
+            JWTTokensBlackList.jwt_token == token
+        ).select()
+        async with self.session.begin():
+            res = await self.session.execute(query)
+            result = res.scalar()
+        return result
+
 
 async def get_current_user(
         token: str = Depends(oauth2_scheme),
@@ -182,11 +196,13 @@ async def get_current_user(
     )
     try:
         manager = JWTTokenManager(session)
+        if await manager.token_in_blacklist(token=token):
+            raise credentials_exception
         payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
         auth_value: str = payload.get('auth_value')
         if auth_value is None:
             raise credentials_exception
-        token_data = JWTTokenData(username=auth_value)
+        token_data = JWTTokenData(auth_value=auth_value)
     except JWTError:
         raise credentials_exception
     user = await manager.get_user_by_username_or_email(token_data.auth_value)
@@ -204,3 +220,9 @@ async def get_active_user(
             status_code=400
         )
     return current_user
+
+
+async def get_current_user_token(
+        token: str = Depends(oauth2_scheme)
+):
+    return token
