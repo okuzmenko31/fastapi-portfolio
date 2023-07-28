@@ -62,5 +62,3 @@ class PasswordValidator:
 def validate_password(password: str) -> PasswordValidationData:
     validator = PasswordValidator(value=password)
     return validator.validate_password()
-
-

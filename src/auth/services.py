@@ -149,6 +149,34 @@ class UserPasswordManager(SessionInitializer):
 class UserManager(UserCreationManager,
                   UserPasswordManager):
 
+    async def check_user_exists_by_field(
+            self,
+            model_field,
+            value: str
+    ):
+        query = exists(User).where(model_field == value).select()
+        async with self.session.begin():
+            res = await self.session.execute(query)
+            result = res.scalar()
+        return result
+
+    async def check_user_exists_by_email(self, email: str):
+        return await self.check_user_exists_by_field(User.email, email)
+
+    async def set_new_value_by_field(
+            self,
+            user: User,
+            field_name: str,
+            value: str
+    ):
+        stmt = update(User).where(User.id == user.id).values({f'{field_name}': value})
+        async with self.session.begin():
+            await self.session.execute(stmt)
+            await self.session.commit()
+
+    async def set_new_email(self, user: User, email: str):
+        await self.set_new_value_by_field(user, 'email', email)
+
     async def get_user_by_field(
             self,
             model_field,
@@ -158,7 +186,7 @@ class UserManager(UserCreationManager,
         async with self.session.begin():
             res = await self.session.execute(query)
             user = res.scalar()
-            return user
+        return user
 
     async def get_user_by_email(self, email: str):
         return await self.get_user_by_field(User.email, email)

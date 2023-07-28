@@ -93,6 +93,10 @@ class ChangePasswordSchema(BaseModel,
     password_confirmation: str
 
 
+class ChangeEmailSchema(BaseModel):
+    email: EmailStr
+
+
 class UserLogin(BaseModel):
     auth_value: str
     password: str

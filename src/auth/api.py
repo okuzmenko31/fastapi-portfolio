@@ -8,7 +8,6 @@ from starlette.responses import JSONResponse
 
 from src.settings.database import get_async_session
 from src.settings.config import ACCESS_TOKEN_EXPIRE_MINUTES
-from .hashing import Hashing
 
 from .models import User
 
@@ -23,7 +22,8 @@ from .schemas import (UserCreate,
                       UserLogin,
                       EmailSchema,
                       PasswordResetSchema,
-                      ChangePasswordSchema)
+                      ChangePasswordSchema,
+                      ChangeEmailSchema)
 
 router = APIRouter(
     prefix='/auth',
@@ -201,3 +201,57 @@ async def change_password(
     return JSONResponse(content={
         'success': 'You successfully changed your password!'
     }, status_code=200)
+
+
+@router.post('/change_email_request/')
+async def change_email(
+        data: ChangeEmailSchema,
+        current_user: User = Depends(get_active_user),
+        managers: dict = Depends(get_managers)
+):
+    user_manager: UserManager = managers['user_manager']
+    if current_user.email == data.email:
+        raise HTTPException(
+            detail='You cannot change your email to the one you have now!',
+            status_code=400
+        )
+    if await user_manager.check_user_exists_by_email(data.email):
+        raise HTTPException(
+            detail='User with provided email is already exists!',
+            status_code=400
+        )
+    token_manager: AuthTokenManager = managers['token_manager']
+    token_manager.token_type = 'ce'
+    msg = await token_manager.send_tokenized_mail(url_main_part='/change_email_confirmation/',
+                                                  email=data.email,
+                                                  router_prefix=router.prefix)
+    return JSONResponse(content={
+        'success': msg
+    }, status_code=200)
+
+
+@router.put('/change_email_confirmation/{token}/{email}/')
+async def change_email_confirm(
+        token: str,
+        email: str,
+        current_user: User = Depends(get_active_user),
+        managers: dict = Depends(get_managers)
+
+):
+    manager: AuthTokenManager = managers['token_manager']
+    token_data = await manager.get_token_data(
+        token=token,
+        email=email
+    )
+    if token_data.token:
+        user_manager: UserManager = managers['user_manager']
+        await user_manager.set_new_email(current_user, email)
+
+        return JSONResponse(content={
+            'success': 'You successfully confirmed new email!'
+        })
+    else:
+        raise HTTPException(
+            detail=token_data.error,
+            status_code=400
+        )
