@@ -41,12 +41,11 @@ class PasswordValidation:
 
     @field_validator('password_confirmation')
     def validate_password_confirm(cls, value, values):
-        print(values)
-        # if not value == values.get('password'):
-        #     raise HTTPException(
-        #         status_code=400,
-        #         detail='Password mismatch!'
-        #     )
+        if not value == values.data.get('password'):
+            raise HTTPException(
+                status_code=400,
+                detail='Password mismatch!'
+            )
         return value
 
 

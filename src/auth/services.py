@@ -108,12 +108,42 @@ class UserCreationManager(UserUniqueFieldsChecker):
 
 class UserPasswordManager(SessionInitializer):
 
+    @staticmethod
+    async def new_dont_equal_to_old(user: User, new_password):
+        if Hashing.verify_password(new_password, user.hashed_password):
+            raise HTTPException(
+                detail='New password must be different from the old one!',
+                status_code=400
+            )
+
+    @staticmethod
+    async def get_hashed_password(password: str):
+        return Hashing.get_hashed_password(password)
+
     async def set_new_password(self, user: User, new_password: str):
-        new_hashed_password = Hashing.get_hashed_password(new_password)
+        await self.new_dont_equal_to_old(user, new_password)
+        new_hashed_password = await self.get_hashed_password(new_password)
         stmt = update(User).where(User.id == user.id).values(hashed_password=new_hashed_password)
         async with self.session.begin():
             await self.session.execute(stmt)
             await self.session.commit()
+
+    @staticmethod
+    async def check_old_password(user: User, password: str):
+        return Hashing.verify_password(password, user.hashed_password)
+
+    async def change_password(
+            self,
+            user: User,
+            old_password: str,
+            new_password: str
+    ):
+        if not await self.check_old_password(user, old_password):
+            raise HTTPException(
+                detail='The old password is incorrect!',
+                status_code=400
+            )
+        await self.set_new_password(user, new_password)
 
 
 class UserManager(UserCreationManager,

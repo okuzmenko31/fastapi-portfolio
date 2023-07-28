@@ -22,7 +22,8 @@ from .schemas import (UserCreate,
                       JWTTokenSchema,
                       UserLogin,
                       EmailSchema,
-                      PasswordResetSchema)
+                      PasswordResetSchema,
+                      ChangePasswordSchema)
 
 router = APIRouter(
     prefix='/auth',
@@ -161,7 +162,7 @@ async def reset_password_request(data: EmailSchema,
     }, status_code=200)
 
 
-@router.post('/password_reset/{token}/{email}/')
+@router.put('/password_reset/{token}/{email}/')
 async def reset_password(token: str,
                          email: str,
                          data: PasswordResetSchema,
@@ -175,14 +176,9 @@ async def reset_password(token: str,
     if token_data.token:
         user_manager: UserManager = managers['user_manager']
         user = await user_manager.get_user_by_email(email=email)
-
-        if Hashing.verify_password(data.password, user.hashed_password):
-            raise HTTPException(
-                detail='The password must be different from the old one!',
-                status_code=400
-            )
         await user_manager.set_new_password(user, data.password)
         await manager.delete_exists_token(token=token_data.token.token)
+
         return JSONResponse(content={
             'success': 'Successful password reset!'
         })
@@ -191,3 +187,17 @@ async def reset_password(token: str,
             detail=token_data.error,
             status_code=400
         )
+
+
+@router.put('/change_password/')
+async def change_password(
+        data: ChangePasswordSchema,
+        current_user: User = Depends(get_active_user),
+        managers: dict = Depends(get_managers)
+):
+    manager: UserManager = managers['user_manager']
+    await manager.change_password(current_user, data.old_password, data.password)
+
+    return JSONResponse(content={
+        'success': 'You successfully changed your password!'
+    }, status_code=200)
