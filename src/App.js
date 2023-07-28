@@ -1,39 +1,36 @@
-import "./components/styles.css";
-import React, { useState, useEffect } from "react";
-import Loading from "./Assets/Loading/Loading";
-import Navbar from "./Assets/Navbar/Navbar";
-import Block1 from "./Assets/Home/Block1";
-import Block2 from "./Assets/Home/Block2";
-import Footer from "./Assets/Footer/Footer";
-function App() {
-    const [loading, setLoading] = useState(false)
+import React from "react";
+import {BrowserRouter, BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
-    useEffect(() => {
-        setLoading(true)
-        setTimeout(() => {
-            setLoading(false)
-        }, 0)
-    }, [])
+import "./components/styles.css";
+
+import Navbar from "./Assets/Navbar/Navbar";
+
+import Home from "./Pages/Home";
+import AboutMe from "./Pages/AboutMe";
+import Projects from "./Pages/Projects";
+import Blog from "./Pages/Blog";
+import SingUp from "./Pages/SingUp";
+import SingIn from "./Pages/SingIn";
+import NoPage from "./Pages/NoPage";
+function App() {
 
   return (
-
-
-
+    <>
     <div className="App">
-
-        {
-            loading ?
-                <Loading />
-                :
-                <div style={{width: "100%", height: "100%", display: "flex", alignItems: "center", flexDirection: "column"}}>
-                <Navbar />
-                <Block1 />
-                <Block2 />
-                <Footer />
-                </div>
-        }
-
+      <Navbar />
     </div>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/Home" element={<Home />}/>
+          <Route path="/about" element={<AboutMe />}/>
+          <Route path="/projects" element={<Projects />}/>
+          <Route path="/blog" element={<Blog />}/>
+          <Route path="/singup" element={<SingUp />}/>
+          <Route path="/singin" element={<SingIn />}/>
+          <Route path="*" element={<NoPage />}/>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

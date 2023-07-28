@@ -1,24 +1,31 @@
 import React from 'react';
-import DefaultStyles from "../../components/styles.css";
-import classes from "./navbar.css";
-import cls from "./navbarbuttons.css";
-import cls2 from "./icons.modules.css";
 import { AiFillGithub } from "react-icons/ai";
+
+import "../../components/styles.css";
+import "./navbar.css";
+import "./navbarbuttons.css";
+import "./icons.modules.css";
 
 const Navbar = () => {
     return (
-        <div className="navbar">
+            <div className="navbar">
 
-            <a className="logo" href="http://localhost:3000">OK</a>
+                <a className="logo" href="http://localhost:3000">OK</a>
 
-            <div className="navigation-block">
-                <a className="navbar-button" href="http://localhost:3000">Home</a>
-                <a className="navbar-button" href="http://localhost:3000">About me</a>
-                <a className="navbar-button" href="http://localhost:3000">Projects</a>
-                <a className="navbar-button" href="http://localhost:3000">Blog</a>
-                <a className="navbar-button icons" href="#"><AiFillGithub /></a>
+                <div className="navbar-main-block">
+                    <div className="navigation-block">
+                        <a className="navbar-button" href="/home">Home</a>
+                        <a className="navbar-button" href="/about">About me</a>
+                        <a className="navbar-button" href="/projects">Projects</a>
+                        <a className="navbar-button" href="/blog">Blog</a>
+                        <a className="navbar-button icons" href="#"><AiFillGithub /></a>
+                    </div>
+                    <div className="registration-sing-in-block">
+                        <a className="navbar-button" href="/singup">Sing up</a>
+                        <a className="navbar-button" href="/singin">Sing in</a>
+                    </div>
+                </div>
             </div>
-        </div>
     );
 };
 

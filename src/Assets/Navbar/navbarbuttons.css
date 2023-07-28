@@ -1,3 +1,13 @@
+.navbar-button {
+    color: black;
+    transition: 0.2s linear;
+}
+
+.navbar-button:hover {
+    color: mediumpurple;
+}
+
+
 .navbar-button:before {
     content: "";
     position: absolute;
