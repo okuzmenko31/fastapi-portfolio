@@ -4,9 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import JSONResponse
 
 from src.settings.database import get_async_session
 from src.settings.config import ACCESS_TOKEN_EXPIRE_MINUTES
+from .hashing import Hashing
 
 from .models import User
 
@@ -15,7 +17,12 @@ from .services import (UserManager,
                        get_active_user,
                        get_current_user_token)
 from .token import AuthTokenManager
-from .schemas import UserCreate, UserShow, JWTTokenSchema, UserLogin
+from .schemas import (UserCreate,
+                      UserShow,
+                      JWTTokenSchema,
+                      UserLogin,
+                      EmailSchema,
+                      PasswordResetSchema)
 
 router = APIRouter(
     prefix='/auth',
@@ -133,3 +140,54 @@ async def read_users_me(
         is_owner=current_user.is_owner,
         roles=current_user.roles
     )
+
+
+@router.post('/password_reset_request/')
+async def reset_password_request(data: EmailSchema,
+                                 managers: dict = Depends(get_managers)):
+    manager: UserManager = managers['user_manager']
+    user = await manager.get_user_by_email(email=data.email)
+    if user is None:
+        return JSONResponse(content={
+            'error': 'User with provided email does not exists!'
+        }, status_code=400)
+    token_manager: AuthTokenManager = managers['token_manager']
+    token_manager.token_type = 'pr'
+    msg = await token_manager.send_tokenized_mail(url_main_part='/password_reset/',
+                                                  email=data.email,
+                                                  router_prefix=router.prefix)
+    return JSONResponse(content={
+        'success': msg
+    }, status_code=200)
+
+
+@router.post('/password_reset/{token}/{email}/')
+async def reset_password(token: str,
+                         email: str,
+                         data: PasswordResetSchema,
+                         managers: dict = Depends(get_managers)):
+    manager: AuthTokenManager = managers['token_manager']
+    token_data = await manager.get_token_data(
+        token=token,
+        email=email,
+        delete_token=False
+    )
+    if token_data.token:
+        user_manager: UserManager = managers['user_manager']
+        user = await user_manager.get_user_by_email(email=email)
+
+        if Hashing.verify_password(data.password, user.hashed_password):
+            raise HTTPException(
+                detail='The password must be different from the old one!',
+                status_code=400
+            )
+        await user_manager.set_new_password(user, data.password)
+        await manager.delete_exists_token(token=token_data.token.token)
+        return JSONResponse(content={
+            'success': 'Successful password reset!'
+        })
+    else:
+        raise HTTPException(
+            detail=token_data.error,
+            status_code=400
+        )

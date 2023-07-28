@@ -27,7 +27,31 @@ class UserShow(MainSchema):
     roles: list
 
 
-class UserCreate(BaseModel):
+class PasswordValidation:
+
+    @field_validator('password')
+    def validate_password(cls, value):
+        error, success = validate_password(value)
+        if not success and error:
+            raise HTTPException(
+                detail=error,
+                status_code=400
+            )
+        return value
+
+    @field_validator('password_confirmation')
+    def validate_password_confirm(cls, value, values):
+        print(values)
+        # if not value == values.get('password'):
+        #     raise HTTPException(
+        #         status_code=400,
+        #         detail='Password mismatch!'
+        #     )
+        return value
+
+
+class UserCreate(BaseModel,
+                 PasswordValidation):
     username: str
     email: EmailStr
     password: str
@@ -43,16 +67,6 @@ class UserCreate(BaseModel):
             )
         return value
 
-    @field_validator('password')
-    def validate_password(cls, value):
-        error, success = validate_password(value)
-        if not success and error:
-            raise HTTPException(
-                detail=error,
-                status_code=400
-            )
-        return value
-
     @field_validator('secret_phrase')
     def validate_secret_phrase(cls, value: str):
         if not check_phrase_is_valid(value):
@@ -61,6 +75,23 @@ class UserCreate(BaseModel):
                 status_code=400
             )
         return value
+
+
+class EmailSchema(BaseModel):
+    email: EmailStr
+
+
+class PasswordResetSchema(BaseModel,
+                          PasswordValidation):
+    password: str
+    password_confirmation: str
+
+
+class ChangePasswordSchema(BaseModel,
+                           PasswordValidation):
+    old_password: str
+    password: str
+    password_confirmation: str
 
 
 class UserLogin(BaseModel):

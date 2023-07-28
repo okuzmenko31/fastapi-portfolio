@@ -7,7 +7,7 @@ from fastapi.exceptions import HTTPException
 from jose import jwt, JWTError
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, exists, insert
+from sqlalchemy import select, exists, insert, update
 
 from .models import User, Roles, JWTTokensBlackList
 from .schemas import UserCreate, UserShow, JWTTokenData
@@ -106,7 +106,18 @@ class UserCreationManager(UserUniqueFieldsChecker):
         )
 
 
-class UserManager(UserCreationManager):
+class UserPasswordManager(SessionInitializer):
+
+    async def set_new_password(self, user: User, new_password: str):
+        new_hashed_password = Hashing.get_hashed_password(new_password)
+        stmt = update(User).where(User.id == user.id).values(hashed_password=new_hashed_password)
+        async with self.session.begin():
+            await self.session.execute(stmt)
+            await self.session.commit()
+
+
+class UserManager(UserCreationManager,
+                  UserPasswordManager):
 
     async def get_user_by_field(
             self,

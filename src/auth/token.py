@@ -445,7 +445,8 @@ class AuthTokenManager(AuthTokenURLMixin,
     async def get_token_data(
             self,
             token: str,
-            email: str
+            email: str,
+            delete_token=True
     ) -> TokenData:
         """
         Function for getting token data.
@@ -453,6 +454,7 @@ class AuthTokenManager(AuthTokenURLMixin,
         Args:
             token (str): The token string to retrieve.
             email (str): The email of the token owner.
+            delete_token (bool): .
 
         Returns:
             The TokenData object with either the token or an error message.
@@ -469,5 +471,6 @@ class AuthTokenManager(AuthTokenURLMixin,
         )
         if token.expired:
             return TokenData(error=MESSAGES['token_expired_error'])
-        await self.delete_exists_token(token=token.token)
+        if delete_token:
+            await self.delete_exists_token(token=token.token)
         return TokenData(token=token)
