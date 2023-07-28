@@ -1,35 +1,37 @@
 import React from "react";
-import {BrowserRouter, BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "./components/styles.css";
 
 import Navbar from "./Assets/Navbar/Navbar";
 
-import Home from "./Pages/Home";
-import AboutMe from "./Pages/AboutMe";
-import Projects from "./Pages/Projects";
-import Blog from "./Pages/Blog";
-import SingUp from "./Pages/SingUp";
-import SingIn from "./Pages/SingIn";
-import NoPage from "./Pages/NoPage";
+import Home from "./Pages/Home/Home";
+import AboutMe from "./Pages/AboutMe/AboutMe";
+import Projects from "./Pages/Projects/Projects";
+import Blog from "./Pages/Blog/Blog";
+import SingUp from "./Pages/SingUp/SingUp";
+import SingIn from "./Pages/SingIn/SingIn";
+import NoPage from "./Pages/NoPage/NoPage";
 function App() {
 
   return (
     <>
     <div className="App">
+      {
+        <BrowserRouter>
+          <Routes>
+            <Route path="/Home" element={<Home />}/>
+            <Route path="/about" element={<AboutMe />}/>
+            <Route path="/projects" element={<Projects />}/>
+            <Route path="/blog" element={<Blog />}/>
+            <Route path="/singup" element={<SingUp />}/>
+            <Route path="/singin" element={<SingIn />}/>
+            <Route path="*" element={<NoPage />}/>
+          </Routes>
+        </BrowserRouter>
+      }
       <Navbar />
     </div>
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/Home" element={<Home />}/>
-          <Route path="/about" element={<AboutMe />}/>
-          <Route path="/projects" element={<Projects />}/>
-          <Route path="/blog" element={<Blog />}/>
-          <Route path="/singup" element={<SingUp />}/>
-          <Route path="/singin" element={<SingIn />}/>
-          <Route path="*" element={<NoPage />}/>
-        </Routes>
-      </BrowserRouter>
     </>
   );
 }

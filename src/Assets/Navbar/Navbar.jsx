@@ -21,8 +21,8 @@ const Navbar = () => {
                         <a className="navbar-button icons" href="#"><AiFillGithub /></a>
                     </div>
                     <div className="registration-sing-in-block">
-                        <a className="navbar-button" href="/singup">Sing up</a>
                         <a className="navbar-button" href="/singin">Sing in</a>
+                        <a className="navbar-button" href="/singup">Sing up</a>
                     </div>
                 </div>
             </div>

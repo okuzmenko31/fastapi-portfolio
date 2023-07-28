@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 
-import "../components/styles.css";
+import "../../components/styles.css";
 
-import Loading from "../Assets/Loading/Loading";
-import Navbar from "../Assets/Navbar/Navbar";
-import Block1 from "../Assets/Home/Block1";
-import Block2 from "../Assets/Home/Block2";
-import Footer from "../Assets/Footer/Footer";
+import Loading from "../../Assets/Loading/Loading";
+import Navbar from "../../Assets/Navbar/Navbar";
+import Block1 from "../../Assets/Home/Block1";
+import Block2 from "../../Assets/Home/Block2";
+import Footer from "../../Assets/Footer/Footer";
 
 const Home = () => {
     const [loading, setLoading] = useState(false)
@@ -19,7 +19,7 @@ const Home = () => {
     }, [])
 
         return (
-            <div className="App_">
+            <>
             {
                 loading ?
                     <Loading />
@@ -31,7 +31,7 @@ const Home = () => {
                         <Footer />
                     </div>
             }
-            </div>
+            </>
         );
 };
 
