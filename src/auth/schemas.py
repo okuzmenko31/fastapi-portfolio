@@ -1,7 +1,7 @@
 import re
 import uuid
 
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel, EmailStr, field_validator
 from fastapi.exceptions import HTTPException
@@ -61,3 +61,17 @@ class UserCreate(BaseModel):
                 status_code=400
             )
         return value
+
+
+class UserLogin(BaseModel):
+    auth_value: str
+    password: str
+
+
+class JWTTokenSchema(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class JWTTokenData(BaseModel):
+    auth_value: Union[str, None] = None

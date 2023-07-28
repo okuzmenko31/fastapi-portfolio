@@ -145,3 +145,6 @@ media
 
 # SECRET FILES
 secret_phrase.json
+
+
+pg_hba.conf
