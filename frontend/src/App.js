@@ -12,7 +12,7 @@ import Projects from "./Pages/Projects/Projects";
 import Blog from "./Pages/Blog/Blog";
 import SingUp from "./Pages/SingUp/SingUp";
 import SingIn from "./Pages/SingIn/SingIn";
-import NoPage from "./Pages/NoPage/NoPage";
+import NoPage from "./Pages/NoPage/NoPage.jsx";
 import Footer from "./Assets/Footer/Footer";
 function App() {
 
