@@ -1,0 +1,17 @@
+.fzf-error-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.fzf-error-text {
+    font-size: 200px;
+    margin: 0;
+}
+
+.fzf-error-desc {
+    font-size: 20px;
+    margin: 0;
+}

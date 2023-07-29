@@ -5,6 +5,7 @@ import "./singup.css"
 
 import beautifulImage from "../../components/imgs/beautifulImage.png"
 import { CSSTransition } from "react-transition-group";
+import Footer from "../../Assets/Footer/Footer";
 
 
 const SingUp = () => {
