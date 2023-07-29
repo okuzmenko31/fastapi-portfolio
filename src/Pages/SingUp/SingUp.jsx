@@ -10,9 +10,16 @@ import Footer from "../../Assets/Footer/Footer";
 
 const SingUp = () => {
     const [showSecretPhraseField, setShowSecretPhraseField] = useState(false);
+    const [password, setPassword] = useState("")
+    const [confirm_password, setConfirmPassword] = useState("")
+    const [passVisible, setPassVisible] = useState(false)
 
     const toggleSecretPhraseField = () => {
         setShowSecretPhraseField(!showSecretPhraseField);
+    };
+
+    const togglePasswordVisibility = () => {
+        setPassVisible(!passVisible);
     };
 
     return (
@@ -57,12 +64,27 @@ const SingUp = () => {
                                     </div>
                                     <div className="singup-forms-form-right">
                                         <div className="singup-form-block">
-                                            <h5>Password</h5>
-                                            <input className="reg-input" placeholder="Please enter a password"/>
+                                            <div style={{display:"flex"}}>
+                                                <h5>Password</h5>
+                                                <input className="setPassVisibility" style={{ margin: "0 0 0 10px" }} type="checkbox" onChange={togglePasswordVisibility} checked={passVisible}/>
+                                            </div>
+                                            <input id="password"
+                                                   value={password}
+                                                   type={passVisible ? "text" : "password"}
+                                                   onChange={e => setPassword(e.target.value)}
+                                                   className={!passVisible ? "reg-input password-font" : "reg-input"}
+                                                   placeholder="Please enter a password"
+                                            />
                                         </div>
                                         <div className="singup-form-block">
                                             <h5>Confirm password</h5>
-                                            <input className="reg-input" placeholder="Please confirm your password"/>
+                                            <input id="confirm_password"
+                                                   value={confirm_password}
+                                                   type={passVisible ? "text" : "password"}
+                                                   onChange={e => setConfirmPassword(e.target.value)}
+                                                   className={!passVisible ? "reg-input password-font" : "reg-input"}
+                                                   placeholder="Please confirm your password"
+                                            />
                                         </div>
                                         <div className="show-secret-phrase-field">
                                             <h5 style={{margin:"0px"}}>As Admin</h5>

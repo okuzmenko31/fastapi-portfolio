@@ -99,6 +99,7 @@
     color: #3202b2;
     text-decoration: underline;
 }
+
 .singin-title {
     margin-top: 0;
 }
@@ -113,4 +114,44 @@
     background: #3202b2;
     border-radius: 50px;
     z-index: 1010;
+}
+
+.setPassVisibility {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 15px;
+    width: 15px;
+    background: lightgray;
+    border-radius: 2px;
+    cursor: pointer;
+    display: flex;
+    outline: none;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.setPassVisibility:after {
+    content: "👁️";
+    font-weight: 900;
+    font-size: 12px;
+    color: white;
+    display: none;
+    transition: 0.3s;
+}
+
+.setPassVisibility:checked {
+    background: #3202b2;
+}
+
+.setPassVisibility:checked:after {
+    display: block;
+}
+
+.password-font {
+    font-family: sans-serif !important;
+}
+
+.password-font::placeholder {
+    font-family: "HarmonyOS Sans", sans-serif !important;
 }

@@ -1,8 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import beautifulImage from "../../components/imgs/beautifulImage.png";
 import "./singin.css"
 
 const SingIn = () => {
+    const [password, setPassword] = useState("")
+    const [passVisible, setPassVisible] = useState(false)
+
+    const togglePasswordVisibility = () => {
+        setPassVisible(!passVisible);
+    };
+
     return (
         <div className="singin-window high_index">
             <div className="singin-img">
@@ -23,8 +30,17 @@ const SingIn = () => {
                                 </div>
                                 <div className="singin-forms-form-right">
                                     <div className="singin-form-block">
-                                        <h5>Password</h5>
-                                        <input className="reg-input" placeholder="Please enter your password"/>
+                                        <div style={{display:"flex"}}>
+                                            <h5>Password</h5>
+                                            <input className="setPassVisibility" style={{ margin: "0 0 0 10px" }} type="checkbox" onChange={togglePasswordVisibility} checked={passVisible}/>
+                                        </div>
+                                        <input id="password"
+                                               value={password}
+                                               type={passVisible ? "text" : "password"}
+                                               onChange={e => setPassword(e.target.value)}
+                                               className={!passVisible ? "reg-input password-font" : "reg-input"}
+                                               placeholder="Please enter a password"
+                                        />
                                     </div>
                                 </div>
                         </div>
