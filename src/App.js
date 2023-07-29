@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./components/styles.css";
 
 import Navbar from "./Assets/Navbar/Navbar"
+import PageChangeAnimation from "./components/PageChangeAnimation"
 
 import Home from "./Pages/Home/Home";
 import AboutMe from "./Pages/AboutMe/AboutMe";
@@ -17,6 +18,7 @@ function App() {
 
   return (
     <>
+    <PageChangeAnimation>
     <div className="App">
       {
         <BrowserRouter>
@@ -34,6 +36,7 @@ function App() {
       }
       <Navbar />
     </div>
+    </PageChangeAnimation>
     </>
   );
 }
