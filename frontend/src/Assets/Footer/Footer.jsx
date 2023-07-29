@@ -1,6 +1,6 @@
 import React from 'react';
 import './Footer.css';
-import { AiFillGithub, AiFillLinkedin, AiFillTwitterCircle } from "react-icons/ai";
+import { AiFillGithub, AiFillLinkedin, AiFillInstagram, AiFillTwitterCircle } from "react-icons/ai";
 
 const Footer = () => {
     return (
@@ -16,6 +16,7 @@ const Footer = () => {
                     <div className="icons-footer-ok">
                         <a className="link-style" target="_blank" href="#"><AiFillGithub /></a>
                         <a className="link-style" target="_blank" href="#"><AiFillLinkedin /></a>
+                        <a className="link-style" target="_blank" href="#"><AiFillInstagram /></a>
                         <a className="link-style" target="_blank" href="#"><AiFillTwitterCircle /></a>
                     </div>
                 </div>
