@@ -57,13 +57,15 @@
     width: 225px;
     outline-style: none;
     border-radius: 10px;
+    font-weight: 900;
     border: 1px solid rgba(208, 208, 208, 0.5);
+    padding: 10px;
+    box-sizing: border-box;
     transition: .5s;
 }
 
 .sin-input::placeholder {
     color: rgba(208, 208, 208, 1);
-    padding: 10px;
     font-size: 11px;
     font-weight: 800;
     transition: 0.3s;
@@ -114,38 +116,6 @@
     background: #3202b2;
     border-radius: 50px;
     z-index: 1010;
-}
-
-.setPassVisibility {
-    appearance: none;
-    -webkit-appearance: none;
-    height: 15px;
-    width: 15px;
-    background: lightgray;
-    border-radius: 2px;
-    cursor: pointer;
-    display: flex;
-    outline: none;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
-}
-
-.setPassVisibility:after {
-    content: "👁️";
-    font-weight: 900;
-    font-size: 12px;
-    color: white;
-    display: none;
-    transition: 0.3s;
-}
-
-.setPassVisibility:checked {
-    background: #3202b2;
-}
-
-.setPassVisibility:checked:after {
-    display: block;
 }
 
 .password-font {

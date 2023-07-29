@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AiOutlineEye as Eye, AiOutlineEyeInvisible as EyeInv } from "react-icons/ai";
 
 import "../../components/styles.css"
 import "./singup.css"
@@ -64,17 +65,24 @@ const SingUp = () => {
                                     </div>
                                     <div className="singup-forms-form-right">
                                         <div className="singup-form-block">
-                                            <div style={{display:"flex"}}>
-                                                <h5>Password</h5>
-                                                <input className="setPassVisibility" style={{ margin: "0 0 0 10px" }} type="checkbox" onChange={togglePasswordVisibility} checked={passVisible}/>
+                                            <h5>Password</h5>
+                                            <div style={{display:"flex", alignItems:"center", justifyContent:"end"}}>
+                                                <input id="password"
+                                                       value={password}
+                                                       type={passVisible ? "text" : "password"}
+                                                       onChange={e => setPassword(e.target.value)}
+                                                       className={!passVisible ? "reg-input password-font" : "reg-input"}
+                                                       placeholder="Please enter a password"
+                                                />
+                                                <div style={{position:"absolute", padding:"10px", margin:"0", width:"16px", height:"16px", cursor:"pointer"}}
+                                                     onClick={() => {
+                                                         setPassVisible(!passVisible)
+                                                     }}>
+                                                    {
+                                                        passVisible ? <Eye /> : <EyeInv />
+                                                    }
+                                                </div>
                                             </div>
-                                            <input id="password"
-                                                   value={password}
-                                                   type={passVisible ? "text" : "password"}
-                                                   onChange={e => setPassword(e.target.value)}
-                                                   className={!passVisible ? "reg-input password-font" : "reg-input"}
-                                                   placeholder="Please enter a password"
-                                            />
                                         </div>
                                         <div className="singup-form-block">
                                             <h5>Confirm password</h5>
