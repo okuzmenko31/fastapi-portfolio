@@ -14,7 +14,7 @@ const Navbar = () => {
 
                 <div className="navbar-main-block">
                     <div className="navigation-block">
-                        <a className="navbar-button" href="/home">Home</a>
+                        <a className="navbar-button" href="/">Home</a>
                         <a className="navbar-button" href="/about">About me</a>
                         <a className="navbar-button" href="/projects">Projects</a>
                         <a className="navbar-button" href="/blog">Blog</a>
