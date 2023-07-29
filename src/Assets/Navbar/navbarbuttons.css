@@ -1,0 +1,25 @@
+.navbar-button {
+    color: black;
+    transition: 0.2s linear;
+}
+
+.navbar-button:hover {
+    color: mediumpurple;
+}
+
+
+.navbar-button:before {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    height: 6px;
+    width: 0;
+    background: mediumpurple;
+    border-radius: 50px;
+    z-index: 2000;
+    transition: 0.2s linear;
+}
+
+.navbar-button:hover:before {
+    width: 100%;
+}

@@ -1,0 +1,18 @@
+/* ---- reset ---- */
+body{
+    margin:0;
+    padding: 0;
+}
+canvas{
+    display: block;
+    vertical-align: bottom;
+}
+/* ---- particles.js container ---- */
+#particles-js {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 0;
+    top:0;
+    left:0;
+}
