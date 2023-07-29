@@ -22,6 +22,7 @@ python-jose = "^3.3.0"
 cryptography = "^41.0.2"
 pydantic = "2.1.1"
 python-multipart = "^0.0.6"
+uvicorn = "^0.23.1"
 
 
 [build-system]
