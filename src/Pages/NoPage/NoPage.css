@@ -15,3 +15,9 @@
     font-size: 20px;
     margin: 0;
 }
+
+.typewritter-text-color {
+    color: black;
+    font-weight: 900;
+    font-family: "HarmonyOS Sans", sans-serif !important;
+}
