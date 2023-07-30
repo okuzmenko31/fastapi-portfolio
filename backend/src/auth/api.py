@@ -212,7 +212,7 @@ async def change_email(
             detail='You cannot change your email to the one you have now!',
             status_code=400
         )
-    if await user_manager.check_user_exists_by_email(data.email):
+    if await user_manager.check_email_exists(data.email):
         raise HTTPException(
             detail='User with provided email is already exists!',
             status_code=400
