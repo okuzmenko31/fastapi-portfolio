@@ -1,6 +1,6 @@
 import datetime
 from datetime import timedelta
-from typing import Union, Annotated
+from typing import Union, Annotated, Optional
 
 from fastapi import Depends
 from fastapi.exceptions import HTTPException
@@ -26,12 +26,27 @@ class SessionInitializer:
 
 
 class UserUniqueFieldsChecker(SessionInitializer):
+    """
+    Class for checking user's
+    unique fields. For example: 'username'.
+    """
 
     async def check_unique_field(
             self,
             model_field,
             value: str
-    ):
+    ) -> bool:
+        """
+        Method which returns boolean of
+        User exists by provided 'model_field'
+        and 'value'. For example:
+        'model_field' - 'User.username'
+        'value' - 'test_username'
+
+        :param model_field: model class attribute (e.g. 'User.username')
+        :param value: value for filtering (e.g. 'test_username')
+        :return: returns boolean of user exists
+        """
         query = exists(User).where(model_field == value).select()
         async with self.session.begin():
             res = await self.session.execute(query)
@@ -55,6 +70,14 @@ class UserUniqueFieldsChecker(SessionInitializer):
             email: str,
             username: str
     ):
+        """
+        This method checks by unique provided
+        'email' and 'username' and raises
+        an HTTPException if values are not unique.
+
+        :param email: provided email
+        :param username: provided username
+        """
         if await self.check_unique_email(email):
             await self.raise_unique_failed_message('email')
         elif await self.check_unique_username(username):
@@ -62,13 +85,16 @@ class UserUniqueFieldsChecker(SessionInitializer):
 
 
 class UserCreationManager(UserUniqueFieldsChecker):
+    """
+    Manager which is responsible
+    """
 
     async def _create_user(
             self,
             username: str,
             email: str,
             password: str,
-            as_owner=False
+            secret_phrase: Optional[str] = None
     ):
         await self.check_all_fields_unique(email, username)
         new_user = User(
@@ -76,7 +102,7 @@ class UserCreationManager(UserUniqueFieldsChecker):
             email=email,
             hashed_password=password
         )
-        if as_owner:
+        if secret_phrase is not None:
             new_user.roles = [
                 Roles.role_owner
             ]
@@ -212,6 +238,24 @@ class UserManager(UserCreationManager,
             is_owner=user.is_owner,
             roles=user.roles
         )
+
+    async def get_all_users(self) -> list[UserShow]:
+        users_lst = []
+        query = select(User)
+        async with self.session.begin():
+            res = await self.session.execute(query)
+            result_row = res.all()
+        for user in result_row:
+            user_show = UserShow(
+                id=user[0].id,
+                username=user[0].username,
+                email=user[0].email,
+                is_active=user[0].is_active,
+                is_owner=user[0].is_owner,
+                roles=user[0].roles
+            )
+            users_lst.append(user_show)
+        return users_lst
 
 
 class JWTTokenManager(UserManager):

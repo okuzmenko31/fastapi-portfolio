@@ -53,10 +53,7 @@ async def create_user(
     token_manager: AuthTokenManager = managers['token_manager']
     token_manager.token_type = 'su'
     try:
-        as_owner = False
-        if data.secret_phrase is not None:
-            as_owner = True
-        user: UserShow = await user_manager.create_new_user(data, as_owner)
+        user: UserShow = await user_manager.create_new_user(data, data.secret_phrase)
         await token_manager.send_tokenized_mail(
             url_main_part='/confirm_email_and_set_active/',
             email=user.email,
@@ -255,3 +252,10 @@ async def change_email_confirm(
             detail=token_data.error,
             status_code=400
         )
+
+
+@router.get('/all_users/', response_model=list[UserShow])
+async def get_all_users(managers: dict = Depends(get_managers)) -> list[UserShow]:
+    user_manager: UserManager = managers['user_manager']
+    result = await user_manager.get_all_users()
+    return result
