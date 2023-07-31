@@ -61,7 +61,7 @@ class UserCreate(BaseModel,
     def validate_username(cls, value: str):
         if not EN_LOWER_LETTERS_NUMBERS_PATTERN.match(value):
             raise HTTPException(
-                detail='The username must be in LOWER case and contain letter',
+                detail='The username must be in LOWER case and contain numbers',
                 status_code=400
             )
         return value

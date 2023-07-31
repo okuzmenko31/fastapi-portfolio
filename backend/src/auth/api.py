@@ -29,23 +29,25 @@ router = APIRouter(
 )
 
 
-@router.post('/registration/', response_model=UserShow)
+@router.post('/registration/')
 async def create_user(
         data: UserCreate,
         managers: dict = Depends(get_managers)
-) -> UserShow:
+) -> JSONResponse:
     try:
         user_manager: UserManager = managers['user_manager']
         token_manager: AuthTokenManager = managers['token_manager']
         token_manager.token_type = 'su'
 
         user: UserShow = await user_manager.create_new_user(data, data.secret_phrase)
-        await token_manager.send_tokenized_mail(
+        msg: str = await token_manager.send_tokenized_mail(
             url_main_part='/confirm_email_and_set_active/',
             email=user.email,
             router_prefix=router.prefix
         )
-        return user
+        return JSONResponse(content={
+            'message': msg
+        }, status_code=200)
     except IntegrityError as error:
         raise HTTPException(detail=f'Database error: {error}',
                             status_code=503)
