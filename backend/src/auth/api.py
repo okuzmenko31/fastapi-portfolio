@@ -3,18 +3,16 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 
-from src.settings.database import get_async_session
 from src.settings.config import ACCESS_TOKEN_EXPIRE_MINUTES
 
 from .models import User
-
 from .services import (UserManager,
                        JWTTokenManager,
                        get_active_user,
-                       get_current_user_token)
+                       get_current_user_token,
+                       get_managers)
 from .token import AuthTokenManager
 from .schemas import (UserCreate,
                       UserShow,
@@ -31,28 +29,16 @@ router = APIRouter(
 )
 
 
-async def get_managers(
-        session: AsyncSession = Depends(get_async_session)
-) -> dict:
-    user_manager = UserManager(session=session)
-    token_manager = AuthTokenManager(session=session)
-    jwt_token_manager = JWTTokenManager(session=session)
-    return {
-        'user_manager': user_manager,
-        'token_manager': token_manager,
-        'jwt_token_manager': jwt_token_manager
-    }
-
-
 @router.post('/registration/', response_model=UserShow)
 async def create_user(
         data: UserCreate,
         managers: dict = Depends(get_managers)
 ) -> UserShow:
-    user_manager: UserManager = managers['user_manager']
-    token_manager: AuthTokenManager = managers['token_manager']
-    token_manager.token_type = 'su'
     try:
+        user_manager: UserManager = managers['user_manager']
+        token_manager: AuthTokenManager = managers['token_manager']
+        token_manager.token_type = 'su'
+
         user: UserShow = await user_manager.create_new_user(data, data.secret_phrase)
         await token_manager.send_tokenized_mail(
             url_main_part='/confirm_email_and_set_active/',

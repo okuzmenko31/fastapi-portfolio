@@ -3,7 +3,7 @@ import datetime
 from enum import Enum
 
 from datetime import timedelta
-from typing import Union, Annotated, Optional
+from typing import Union, Optional
 
 from fastapi import Depends
 from fastapi.exceptions import HTTPException
@@ -20,6 +20,7 @@ from src.settings.config import (JWT_ALGORITHM,
                                  SECRET_KEY,
                                  oauth2_scheme)
 from src.settings.database import get_async_session
+from .token import AuthTokenManager
 
 
 class SessionInitializer:
@@ -493,3 +494,16 @@ async def get_current_user_token(
         token: str = Depends(oauth2_scheme)
 ):
     return token
+
+
+async def get_managers(
+        session: AsyncSession = Depends(get_async_session)
+) -> dict:
+    user_manager = UserManager(session=session)
+    token_manager = AuthTokenManager(session=session)
+    jwt_token_manager = JWTTokenManager(session=session)
+    return {
+        'user_manager': user_manager,
+        'token_manager': token_manager,
+        'jwt_token_manager': jwt_token_manager
+    }

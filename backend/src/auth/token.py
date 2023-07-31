@@ -13,6 +13,7 @@ from sqlalchemy import select, exists, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import AuthToken
+from src.settings.celery import send_auth_token_mail
 
 from jinja2 import Environment, select_autoescape, PackageLoader
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
@@ -101,11 +102,13 @@ env = Environment(
 
 
 class SendEmailMixin:
+    mail_with_celery = False
+
     def __init__(self, email: str, url: str):
         self.email = email
         self.url = url
 
-    async def maker_send_mail(self, subject, template):
+    async def make_send_mail(self, subject, template_str):
         # Define the config
         conf = ConnectionConfig(
             MAIL_USERNAME=config.SMTP_USERNAME,
@@ -119,7 +122,7 @@ class SendEmailMixin:
             VALIDATE_CERTS=True
         )
         # Generate the HTML template based on the template name
-        template = env.get_template(f'{template}.html')
+        template = env.get_template(f'{template_str}.html')
 
         html = template.render(
             username=self.email,
@@ -137,10 +140,14 @@ class SendEmailMixin:
 
         # Send the email
         fm = FastMail(conf)
-        await fm.send_message(message)
+
+        if self.mail_with_celery:
+            send_auth_token_mail.delay(subject, template_str, self.email, self.url)
+        else:
+            await fm.send_message(message)
 
     async def send_mail(self, subject):
-        await self.maker_send_mail(subject, 'verification')
+        await self.make_send_mail(subject, 'verification')
 
 
 class AuthTokenQueryMixin:
@@ -264,10 +271,8 @@ class AuthTokenManager(AuthTokenURLMixin,
 
     Attributes:
         token_type (str): the token type to create.
-        mail_with_celery (bool): setting which can help you to send emails with celery.
     """
     token_type = None
-    mail_with_celery = False
 
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -413,10 +418,7 @@ class AuthTokenManager(AuthTokenURLMixin,
         url = self.url
         mail_mixin = SendEmailMixin(email=email,
                                     url=url)
-        if self.mail_with_celery:
-            pass
-        else:
-            await mail_mixin.send_mail(subject)
+        await mail_mixin.send_mail(subject)
         return mail_context['success_message']
 
     async def get_token_by_params(

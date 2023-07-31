@@ -19,3 +19,7 @@ SMTP_USER = os.environ.get('EMAIL_HOST_USER')
 SMTP_USERNAME = SMTP_USER.split('@')[0]
 SMTP_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 SMTP_PORT = os.environ.get('EMAIL_PORT')
+
+# CELERY
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq//'
+CELERY_BACKEND_URL = 'amqp://guest:guest@rabbitmq//'
