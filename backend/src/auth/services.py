@@ -222,7 +222,7 @@ class UserCreationManager(UserUniqueFieldsChecker):
         """
         This method calls '_create_user' method to
         create user with provided data and after
-        returns 'UserShow' instance with info about
+        returns 'UserShow' instance with portfolio_info about
         created user.
         """
         user = await self._create_user(

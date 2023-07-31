@@ -1,8 +1,12 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.auth.api import router as auth_router
+from src.portfolio_info.api import router as info_router
 
-routers = [auth_router]
+origins = ['http://localhost:3000']
+
+routers = [auth_router, info_router]
 
 app = FastAPI(
     title='Portfolio'
@@ -10,3 +14,11 @@ app = FastAPI(
 
 for router in routers:
     app.include_router(router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=['*'],
+    allow_method=['*'],
+    allow_headers=['*']
+)
