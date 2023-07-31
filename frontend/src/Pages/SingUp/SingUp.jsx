@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AiOutlineEye as Eye, AiOutlineEyeInvisible as EyeInv } from "react-icons/ai";
+import { AiOutlineEye as Eye, AiOutlineEyeInvisible as EyeInv, AiOutlineCheck } from "react-icons/ai";
 import axios from "axios"
 
 import "../../components/styles.css"
@@ -12,14 +12,16 @@ import Footer from "../../Assets/Footer/Footer";
 
 const SingUp = () => {
     const [showSecretPhraseField, setShowSecretPhraseField] = useState(false);
-    const [username, setUsername] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirm_password, setConfirmPassword] = useState("")
-    const [secret_phrase, setSecretPhrase] = useState("")
-    const [passVisible, setPassVisible] = useState(false)
-    const [Error, setError] = useState("")
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirm_password, setConfirmPassword] = useState("");
+    const [secret_phrase, setSecretPhrase] = useState("");
+    const [passVisible, setPassVisible] = useState(false);
+    const [Error, setError] = useState("");
+    const [emailMsg, setEmailMsg] = useState("");
     const errorElem = document.querySelector("#error-text")
+    const emailText = document.querySelector("#email-mod-text")
 
     function reg_user() {
         axios.post('http://localhost:8000/auth/registration/', {
@@ -29,19 +31,21 @@ const SingUp = () => {
             "password_confirmation":confirm_password
         })
             .then(function (response) {
-                console.log(response);
+                setEmailMsg(response.data.message);
+                emailText.innerHTML = emailMsg
             })
             .catch(function (error) {
                 console.log(error);
                 function checkErrorType() {
                     if (typeof error.response.data.detail === "object") {
-                        setError(error.response.data.detail[0].msg)
+                        setError(error.response.data.detail[0].msg);
+                        errorElem.innerHTML = Error
                     } else {
-                        setError(error.response.data.detail)
+                        setError(error.response.data.detail);
+                        errorElem.innerHTML = Error
                     }
                 }
                 checkErrorType()
-                errorElem.innerHTML = Error
             });
     }
 //error.response.data.detail
@@ -160,6 +164,13 @@ const SingUp = () => {
                                 <h5 style={{color:"red"}} id="error-text" />
                                 <h5 style={{color:"lightgray", marginTop:"30px"}}>Already have an account? <a className="font-color-link" href="/singin">Sing in!</a></h5>
                             </form>
+                        </div>
+                    </div>
+                    <div style={{position:"absolute", width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems:"center", backgroundColor:"rgba(0, 0, 0, 0.5)", zIndex: "3000"}}>
+                        <div className="modal-window">
+                            <AiOutlineCheck className="modal-window-icon"/>
+                            <h2>Successful registration!</h2>
+                            <h5 id="email-mod-text" />
                         </div>
                     </div>
                 </div>
