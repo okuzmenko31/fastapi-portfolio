@@ -4,6 +4,8 @@ import { AiOutlineEye as Eye, AiOutlineEyeInvisible as EyeInv } from "react-icon
 
 import "./singin.css"
 import axios from "axios";
+import { setToken } from '../../components/Auth'
+import {BrowserRouter, redirect, Routes, Route} from "react-router-dom";
 
 const SingIn = () => {
     const [authValue, setAuthValue] = useState("");
@@ -16,15 +18,17 @@ const SingIn = () => {
             "auth_value":authValue,
             "password":password
         })
-            .then(async response => {
-                console.log(response)
+            .then(response => {
+                setToken(response.data.access_token)
             })
             .catch(function (error) {
-                function checkErrorType() {
+                async function checkErrorType() {
                     if (typeof error.response.data.detail === "object") {
-                        errorElem.innerHTML = error.response.data.detail[0].msg
+                        const arrayError = await error.response.data.detail[0].msg
+                        errorElem.innerHTML = arrayError
                     } else {
-                        errorElem.innerHTML = error.response.data.detail
+                        const defaultError = await error.response.data.detail
+                        errorElem.innerHTML = defaultError
                     }
                 }
                 checkErrorType()

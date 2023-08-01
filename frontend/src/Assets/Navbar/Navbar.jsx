@@ -1,5 +1,6 @@
 import React from 'react';
 import { AiFillGithub } from "react-icons/ai";
+import { setToken } from "../../components/Auth"
 
 import "../../components/styles.css";
 import "./navbar.css";
@@ -7,6 +8,11 @@ import "./navbarbuttons.css";
 import "./icons.modules.css";
 
 const Navbar = () => {
+
+    function LogOut() {
+        localStorage.removeItem('AuthToken')
+    }
+
     return (
             <div className="navbar">
 
@@ -21,8 +27,15 @@ const Navbar = () => {
                         <a className="navbar-button icons" href="#"><AiFillGithub /></a>
                     </div>
                     <div className="registration-sing-in-block">
-                        <a className="navbar-button" href="/singin">Sing in</a>
-                        <a className="navbar-button" href="/singup">Sing up</a>
+                        {
+                            !localStorage.getItem("AuthToken") ?
+                                <>
+                                    <a className="navbar-button" href="/singin">Sing in</a>
+                                    <a className="navbar-button" href="/singup">Sing up</a>
+                                </>
+                                :
+                                <a className="navbar-button" onClick={LogOut} href="/singin">Log Out</a>
+                        }
                     </div>
                 </div>
             </div>
