@@ -20,7 +20,6 @@ const SingUp = () => {
     const [modalWinVis, setModalWinVis] = useState(false);
     const errorElem = document.querySelector("#error-text")
     const emailText = document.querySelector("#email-mod-text")
-    const modalWindow = document.querySelector("#modal-window-container")
 
     function reg_user() {
         axios.post('http://localhost:8000/auth/registration/', {

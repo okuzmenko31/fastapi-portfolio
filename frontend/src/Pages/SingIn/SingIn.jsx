@@ -3,10 +3,33 @@ import beautifulImage from "../../components/imgs/beautifulImage.png";
 import { AiOutlineEye as Eye, AiOutlineEyeInvisible as EyeInv } from "react-icons/ai";
 
 import "./singin.css"
+import axios from "axios";
 
 const SingIn = () => {
+    const [authValue, setAuthValue] = useState("");
     const [password, setPassword] = useState("")
     const [passVisible, setPassVisible] = useState(false)
+    const errorElem = document.querySelector("#error-text")
+
+    function log_user() {
+        axios.post('http://localhost:8000/auth/login/', {
+            "auth_value":authValue,
+            "password":password
+        })
+            .then(async response => {
+                console.log(response)
+            })
+            .catch(function (error) {
+                function checkErrorType() {
+                    if (typeof error.response.data.detail === "object") {
+                        errorElem.innerHTML = error.response.data.detail[0].msg
+                    } else {
+                        errorElem.innerHTML = error.response.data.detail
+                    }
+                }
+                checkErrorType()
+            });
+    }
 
     const togglePasswordVisibility = () => {
         setPassVisible(!passVisible);
@@ -27,7 +50,7 @@ const SingIn = () => {
                             <div className="singin-forms-form-left">
                                 <div className="singin-form-block">
                                     <h5>Username or email</h5>
-                                    <input className="sin-input" placeholder="Please enter your username or email"/>
+                                    <input value={authValue} onChange={e => setAuthValue(e.target.value)} className="sin-input" placeholder="Please enter your username or email"/>
                                 </div>
                                 </div>
                                 <div className="singin-forms-form-right">
@@ -54,9 +77,10 @@ const SingIn = () => {
                                 </div>
                         </div>
 
-                        <button className="form-button-submit">
+                        <button type="button" onClick={log_user} className="form-button-submit">
                             Submit
                         </button>
+                        <h5 style={{color:"red"}} id="error-text" content="" />
                         <h5 style={{color:"lightgray", marginTop:"30px"}}>Don't have an account? <a className="font-color-link" href="/singup">Sing up!</a></h5>
                     </form>
                 </div>
