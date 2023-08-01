@@ -7,7 +7,6 @@ import "./singup.css"
 
 import beautifulImage from "../../components/imgs/beautifulImage.png"
 import { CSSTransition } from "react-transition-group";
-import Footer from "../../Assets/Footer/Footer";
 
 
 const SingUp = () => {
@@ -18,10 +17,10 @@ const SingUp = () => {
     const [confirm_password, setConfirmPassword] = useState("");
     const [secret_phrase, setSecretPhrase] = useState("");
     const [passVisible, setPassVisible] = useState(false);
-    const [Error, setError] = useState("");
-    const [emailMsg, setEmailMsg] = useState("");
+    const [modalWinVis, setModalWinVis] = useState(false);
     const errorElem = document.querySelector("#error-text")
     const emailText = document.querySelector("#email-mod-text")
+    const modalWindow = document.querySelector("#modal-window-container")
 
     function reg_user() {
         axios.post('http://localhost:8000/auth/registration/', {
@@ -30,19 +29,16 @@ const SingUp = () => {
             "password":password,
             "password_confirmation":confirm_password
         })
-            .then(function (response) {
-                setEmailMsg(response.data.message);
-                emailText.innerHTML = emailMsg
+            .then(async response => {
+                emailText.innerHTML = await(response.data.message);
+                setModalWinVis(true)
             })
             .catch(function (error) {
-                console.log(error);
                 function checkErrorType() {
                     if (typeof error.response.data.detail === "object") {
-                        setError(error.response.data.detail[0].msg);
-                        errorElem.innerHTML = Error
+                        errorElem.innerHTML = error.response.data.detail[0].msg
                     } else {
-                        setError(error.response.data.detail);
-                        errorElem.innerHTML = Error
+                        errorElem.innerHTML = error.response.data.detail
                     }
                 }
                 checkErrorType()
@@ -57,13 +53,20 @@ const SingUp = () => {
             "password_confirmation":confirm_password,
             "secret_phrase": secret_phrase
         })
-            .then(function (response) {
-                console.log("{ENIS");
+            .then(async response => {
+                emailText.innerHTML = await(response.data.message);
+                setModalWinVis(true)
             })
-            .catch(function (error) {
+            .catch(error  => {
                 console.log(error);
-                setError(error.response.data.detail);
-                errorElem.innerHTML = Error
+                function checkErrorType() {
+                    if (typeof error.response.data.detail === "object") {
+                        errorElem.innerHTML = error.response.data.detail[0].msg
+                    } else {
+                        errorElem.innerHTML = error.response.data.detail
+                    }
+                }
+                checkErrorType()
             });
     }
 
@@ -161,16 +164,22 @@ const SingUp = () => {
                                 } className="form-button-submit">
                                     Submit
                                 </button>
-                                <h5 style={{color:"red"}} id="error-text" />
+                                <h5 style={{color:"red"}} id="error-text" content="" />
                                 <h5 style={{color:"lightgray", marginTop:"30px"}}>Already have an account? <a className="font-color-link" href="/singin">Sing in!</a></h5>
                             </form>
                         </div>
                     </div>
-                    <div style={{position:"absolute", width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems:"center", backgroundColor:"rgba(0, 0, 0, 0.5)", zIndex: "3000"}}>
+                    <div id="modal-window-container" style={{
+                        opacity: modalWinVis ? "1" : "0",
+                        pointerEvents: modalWinVis ? "all" : "none"
+                    }}>
                         <div className="modal-window">
                             <AiOutlineCheck className="modal-window-icon"/>
                             <h2>Successful registration!</h2>
-                            <h5 id="email-mod-text" />
+                            <h5 id="email-mod-text" content=""/>
+                            <button id="modal-window-button" onClick={() => {
+                                setModalWinVis(false)
+                            }}>OK, Close</button>
                         </div>
                     </div>
                 </div>
