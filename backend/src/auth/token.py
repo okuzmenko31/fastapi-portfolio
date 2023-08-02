@@ -189,6 +189,7 @@ class AuthTokenURLMixin:
     __full_url = None
     domain = None
     https = False
+    local_port = '3000'
 
     @property
     def url(self):
@@ -200,9 +201,8 @@ class AuthTokenURLMixin:
             return 'https'
         return 'http'
 
-    @staticmethod
-    def get_local_domain():
-        return '127.0.0.1:8000'
+    def get_local_domain(self):
+        return 'localhost:' + self.local_port
 
     def get_url_first_part(
             self,
@@ -217,7 +217,7 @@ class AuthTokenURLMixin:
         router prefix is '/users/' domain is None,
         and main url part is 'confirm_email_reg',
         method will return:
-        'http://127.0.0.1:8000/users/confirm_email_reg/'
+        'http://localhost:8000/users/confirm_email_reg/'
 
         'url_main_part' - this is the first part of url,
         for example: `@router.post('/confirm_email_reg/{token}/{email}/')`

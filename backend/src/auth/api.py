@@ -53,8 +53,7 @@ async def create_user(
                             status_code=503)
 
 
-@router.post('/confirm_email_and_set_active/{token}/{email}/',
-             response_model=UserShow)
+@router.post('/confirm_email_and_set_active/{token}/{email}/')
 async def confirm_email_and_set_active(
         token: str,
         email: str,
@@ -68,7 +67,12 @@ async def confirm_email_and_set_active(
     if token_data.token:
         user_manager: UserManager = managers['user_manager']
         user = await user_manager.get_user_by_email(email=email)
-        return await user_manager.set_user_active(user=user)
+        await user_manager.set_user_active(user=user)
+        return JSONResponse(
+            content={
+                'detail': 'You successfully registered and confirmed your email!'
+            }, status_code=200
+        )
     else:
         raise HTTPException(
             detail=token_data.error,
