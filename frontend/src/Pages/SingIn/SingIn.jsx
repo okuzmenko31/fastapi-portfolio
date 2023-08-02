@@ -5,13 +5,12 @@ import { AiOutlineEye as Eye, AiOutlineEyeInvisible as EyeInv } from "react-icon
 import "./singin.css"
 import axios from "axios";
 import { setToken } from '../../components/Auth'
-import {BrowserRouter, redirect, Routes, Route} from "react-router-dom";
 
 const SingIn = () => {
     const [authValue, setAuthValue] = useState("");
     const [password, setPassword] = useState("")
     const [passVisible, setPassVisible] = useState(false)
-    const errorElem = document.querySelector("#error-text")
+    const [errorMessage, setErrorMessage] = useState("");
 
     function log_user() {
         axios.post('http://localhost:8000/auth/login/', {
@@ -22,22 +21,15 @@ const SingIn = () => {
                 setToken(response.data.access_token)
             })
             .catch(function (error) {
-                async function checkErrorType() {
-                    if (typeof error.response.data.detail === "object") {
-                        const arrayError = await error.response.data.detail[0].msg
-                        errorElem.innerHTML = arrayError
-                    } else {
-                        const defaultError = await error.response.data.detail
-                        errorElem.innerHTML = defaultError
-                    }
+                if (typeof error.response.data.detail === "object") {
+                    const arrayError = error.response.data.detail[0].msg;
+                    setErrorMessage(arrayError);
+                } else {
+                    const defaultError = error.response.data.detail;
+                    setErrorMessage(defaultError);
                 }
-                checkErrorType()
             });
     }
-
-    const togglePasswordVisibility = () => {
-        setPassVisible(!passVisible);
-    };
 
     return (
         <div className="singin-window high_index">
@@ -84,7 +76,7 @@ const SingIn = () => {
                         <button type="button" onClick={log_user} className="form-button-submit">
                             Submit
                         </button>
-                        <h5 style={{color:"red"}} id="error-text" content="" />
+                        {errorMessage && <h5 style={{ color: "red" }}>{errorMessage}</h5>}
                         <h5 style={{color:"lightgray", marginTop:"30px"}}>Don't have an account? <a className="font-color-link" href="/singup">Sing up!</a></h5>
                     </form>
                 </div>

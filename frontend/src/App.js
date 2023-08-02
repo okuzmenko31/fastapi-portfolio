@@ -14,6 +14,7 @@ import Blog from "./Pages/Blog/Blog";
 import SingUp from "./Pages/SingUp/SingUp";
 import SingIn from "./Pages/SingIn/SingIn";
 import NoPage from "./Pages/NoPage/NoPage.jsx";
+import EmailConfirm from "./Pages/EmailConfirmation/EmailConfirm";
 function App() {
 
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/blog" element={<Blog />}/>
             <Route path="/singup" element={<SingUp />}/>
             <Route path="/singin" element={<SingIn />}/>
+            <Route path="/auth/confirm_email_and_set_active/:token/:email" element={<EmailConfirm />}/>
             <Route path="*" element={<NoPage />}/>
           </Routes>
         </BrowserRouter>

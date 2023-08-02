@@ -8,7 +8,6 @@ import "./singup.css"
 import beautifulImage from "../../components/imgs/beautifulImage.png"
 import { CSSTransition } from "react-transition-group";
 
-
 const SingUp = () => {
     const [showSecretPhraseField, setShowSecretPhraseField] = useState(false);
     const [username, setUsername] = useState("");
@@ -29,7 +28,8 @@ const SingUp = () => {
             "password_confirmation":confirm_password
         })
             .then(async response => {
-                emailText.innerHTML = await(response.data.message);
+                console.log(response);
+                emailText.innerHTML = await(response.data.detail);
                 setModalWinVis(true)
             })
             .catch(function (error) {
