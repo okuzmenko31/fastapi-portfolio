@@ -23,9 +23,9 @@ MESSAGES = {
                          'to another user!'),
     'token_expired_error': 'Signature expired',
     'no_user': 'No such user with this email address!',
-    'complete_registration': 'CodeSphere - complete registration.',
-    'complete_email_changing': 'CodeSphere - complete changing email',
-    'complete_password_reset': 'CodeSphere - complete password reset',
+    'complete_registration': 'Okuzmenko Portfolio - complete registration.',
+    'complete_email_changing': 'Okuzmenko Portfolio - complete changing email',
+    'complete_password_reset': 'Okuzmenko Portfolio - complete password reset',
     'registration_mail_sent': ('Mail with registration link has '
                                'been sent to your email.'),
     'email_changing_sent': ('Mail with email changing confirmation '

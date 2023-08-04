@@ -170,7 +170,7 @@ async def reset_password(token: str,
 
         return JSONResponse(content={
             'success': 'Successful password reset!'
-        })
+        }, status_code=200)
     else:
         raise HTTPException(
             detail=token_data.error,
@@ -238,7 +238,7 @@ async def change_email_confirm(
 
         return JSONResponse(content={
             'success': 'You successfully confirmed new email!'
-        })
+        }, status_code=200)
     else:
         raise HTTPException(
             detail=token_data.error,
