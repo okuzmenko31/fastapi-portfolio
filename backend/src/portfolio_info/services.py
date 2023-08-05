@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import exists, and_, select
 
 from .models import PortfolioInfo, Social
-from .schemas import PortfolioInfoSchema, SocialSchema
+from .schemas import PortfolioInfoSchema, SocialSchema, SocialUpdate
 
 
 class MainManager:
@@ -29,35 +29,66 @@ class MainManager:
 
 class SocialManager(MainManager):
 
-    async def create_socials(self,
-                             socials: list[SocialSchema],
-                             info: PortfolioInfo):
-        socials_show = []
-        if socials is not None:
-            for social in socials:
-                values_dict = {
-                    Social.name: social.name,
-                    Social.link: social.link
-                }
-                if await self.check_exists(Social, values_dict):
-                    raise HTTPException(
-                        detail='Social with this name and link is already exists!',
-                        status_code=400
-                    )
-                social_obj = Social(
-                    name=social.name,
-                    link=social.link
-                )
-                socials_show.append(
-                    SocialSchema(
-                        name=social.name,
-                        link=social.link
-                    )
-                )
-                async with self.session.begin():
-                    info.socials.append(social_obj)
-                    await self.session.commit()
-        return socials_show
+    async def get_social_by_id(self, social_id) -> Union[Social, None]:
+        query = select(Social).where(Social.id == social_id)
+        async with self.session.begin():
+            res = await self.session.execute(query)
+            result = res.scalar()
+        if result is None:
+            raise HTTPException(
+                detail='Social with provided id does not exists!',
+                status_code=400
+            )
+        return result
+
+    async def create_social(
+            self,
+            data: SocialSchema,
+            info: PortfolioInfo
+    ) -> SocialSchema:
+        values_dict = {
+            Social.name: data.name,
+            Social.link: data.link
+        }
+        if await self.check_exists(Social, values_dict):
+            raise HTTPException(
+                detail='Social with this name and link is already exists!',
+                status_code=400
+            )
+        social = Social(
+            name=data.name,
+            link=data.link
+        )
+        async with self.session.begin():
+            info.socials.append(social)
+            await self.session.commit()
+        return SocialSchema(
+            name=social.name,
+            link=social.link
+        )
+
+    async def update_social(
+            self,
+            data: SocialUpdate
+    ) -> SocialSchema:
+        social = await self.get_social_by_id(data.id)
+        values_dict = {
+            Social.name: data.new_data.name,
+            Social.link: data.new_data.link
+        }
+        if await self.check_exists(Social, values_dict):
+            raise HTTPException(
+                detail='Please, provide new name and link for this social.',
+                status_code=400
+            )
+        async with self.session.begin():
+            social.name = data.new_data.name
+            social.link = data.new_data.link
+            await self.session.commit()
+        return SocialSchema(
+            name=social.name,
+            link=social.link
+        )
 
 
 class PortfolioInfoManager(SocialManager):

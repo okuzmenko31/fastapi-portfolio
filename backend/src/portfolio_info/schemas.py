@@ -1,4 +1,4 @@
-from typing import Optional
+import uuid
 
 from pydantic import BaseModel
 
@@ -17,5 +17,6 @@ class PortfolioInfoSchema(MainSchema):
     owner_name: str
 
 
-class CreateSocials(MainSchema):
-    socials: list[SocialSchema]
+class SocialUpdate(MainSchema):
+    id: uuid.UUID
+    new_data: SocialSchema

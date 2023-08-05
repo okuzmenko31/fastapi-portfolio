@@ -6,12 +6,28 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.settings.database import get_async_session
 
 from .services import PortfolioInfoManager
-from .schemas import PortfolioInfoSchema, CreateSocials, SocialSchema
+from .schemas import PortfolioInfoSchema, SocialSchema, SocialUpdate
 
 router = APIRouter(
     prefix='/portfolio_info',
     tags=['Portfolio Info']
 )
+
+
+@router.get('', response_model=PortfolioInfoSchema)
+async def get_portfolio_info(
+        session: AsyncSession = Depends(get_async_session)
+):
+    manager = PortfolioInfoManager(session)
+    info = await manager.get_portfolio_info()
+    if info is None:
+        raise HTTPException(
+            detail='Portfolio Info isn\'t created! Create it please.',
+            status_code=400
+        )
+    return PortfolioInfoSchema(
+        owner_name=info.owner_name
+    )
 
 
 @router.post('/create/', response_model=PortfolioInfoSchema)
@@ -35,17 +51,27 @@ async def update_portfolio_info(
     return info
 
 
-@router.post('/create_socials/', response_model=list[SocialSchema])
-async def create_socials(
-        data: CreateSocials,
+@router.post('/create_social/', response_model=SocialSchema)
+async def create_social(
+        data: SocialSchema,
         session: AsyncSession = Depends(get_async_session)
-) -> list[SocialSchema]:
+) -> SocialSchema:
     manager = PortfolioInfoManager(session)
     info = await manager.get_portfolio_info()
     if info is None:
         raise HTTPException(
-            detail='First of all you need to create Portfolio Info!',
+            detail='First of all you need to create a Portfolio Info!',
             status_code=400
         )
-    socials = await manager.create_socials(data.socials, info)
-    return socials
+    social = await manager.create_social(data, info)
+    return social
+
+
+@router.put('/update_social/', response_model=SocialSchema)
+async def update_social(
+        data: SocialUpdate,
+        session: AsyncSession = Depends(get_async_session)
+) -> SocialSchema:
+    manager = PortfolioInfoManager(session)
+    social = await manager.update_social(data)
+    return social
