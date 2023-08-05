@@ -17,6 +17,5 @@ class PortfolioInfoSchema(MainSchema):
     owner_name: str
 
 
-class SocialUpdate(MainSchema):
-    id: uuid.UUID
-    new_data: SocialSchema
+class AllSocialsShow(MainSchema):
+    socials: list[SocialSchema]

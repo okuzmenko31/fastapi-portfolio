@@ -3,10 +3,12 @@ from fastapi import HTTPException
 from typing import Union
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import exists, and_, select
+from sqlalchemy import exists, and_, select, delete
 
 from .models import PortfolioInfo, Social
-from .schemas import PortfolioInfoSchema, SocialSchema, SocialUpdate
+from .schemas import (PortfolioInfoSchema,
+                      SocialSchema,
+                      AllSocialsShow)
 
 
 class MainManager:
@@ -69,12 +71,13 @@ class SocialManager(MainManager):
 
     async def update_social(
             self,
-            data: SocialUpdate
+            data: SocialSchema,
+            social_id: str
     ) -> SocialSchema:
-        social = await self.get_social_by_id(data.id)
+        social = await self.get_social_by_id(social_id)
         values_dict = {
-            Social.name: data.new_data.name,
-            Social.link: data.new_data.link
+            Social.name: data.name,
+            Social.link: data.link
         }
         if await self.check_exists(Social, values_dict):
             raise HTTPException(
@@ -82,12 +85,33 @@ class SocialManager(MainManager):
                 status_code=400
             )
         async with self.session.begin():
-            social.name = data.new_data.name
-            social.link = data.new_data.link
+            social.name = data.name
+            social.link = data.link
             await self.session.commit()
         return SocialSchema(
             name=social.name,
             link=social.link
+        )
+
+    async def delete_social(self, social_id: str):
+        stmt = delete(Social).where(Social.id == social_id)
+        async with self.session.begin():
+            await self.session.execute(stmt)
+            await self.session.commit()
+
+    async def get_socials(self, info: PortfolioInfo) -> AllSocialsShow:
+        socials_lst = []
+        async with self.session.begin():
+            socials = info.socials
+            for social in socials:
+                socials_lst.append(
+                    SocialSchema(
+                        name=social.name,
+                        link=social.link
+                    )
+                )
+        return AllSocialsShow(
+            socials=socials_lst
         )
 
 
