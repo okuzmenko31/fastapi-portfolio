@@ -12,7 +12,7 @@ from .services import (UserManager,
                        JWTTokenManager,
                        get_active_user,
                        get_current_user_token,
-                       get_managers)
+                       get_managers, get_active_owner)
 from .token import AuthTokenManager
 from .schemas import (UserCreate,
                       UserShow,
@@ -92,7 +92,7 @@ async def login_for_access_token(
     )
     if not user:
         raise HTTPException(
-            detail='Incorrect username/email or password!',
+            detail='Incorrect username/email or password! Or account is not confirmed!',
             status_code=401,
             headers={"WWW-Authenticate": "Bearer"}
         )
@@ -247,7 +247,9 @@ async def change_email_confirm(
 
 
 @router.get('/all_users/', response_model=list[UserShow])
-async def get_all_users(managers: dict = Depends(get_managers)) -> list[UserShow]:
+async def get_all_users(
+        managers: dict = Depends(get_managers),
+) -> list[UserShow]:
     user_manager: UserManager = managers['user_manager']
     result = await user_manager.get_all_users()
     return result

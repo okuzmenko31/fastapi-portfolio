@@ -15,4 +15,7 @@ class SocialSchema(MainSchema):
 
 class PortfolioInfoSchema(MainSchema):
     owner_name: str
-    socials: Optional[list[SocialSchema]] = None
+
+
+class CreateSocials(MainSchema):
+    socials: list[SocialSchema]

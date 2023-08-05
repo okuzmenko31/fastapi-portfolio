@@ -1,12 +1,15 @@
 from fastapi import HTTPException
+
+from typing import Union
+
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import exists, and_
+from sqlalchemy import exists, and_, select
 
 from .models import PortfolioInfo, Social
 from .schemas import PortfolioInfoSchema, SocialSchema
 
 
-class PortfolioInfoManager:
+class MainManager:
 
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -22,6 +25,9 @@ class PortfolioInfoManager:
             res = await self.session.execute(query)
             result = res.scalar()
         return result
+
+
+class SocialManager(MainManager):
 
     async def create_socials(self,
                              socials: list[SocialSchema],
@@ -48,8 +54,13 @@ class PortfolioInfoManager:
                         link=social.link
                     )
                 )
-                info.socials.append(social_obj)
+                async with self.session.begin():
+                    info.socials.append(social_obj)
+                    await self.session.commit()
         return socials_show
+
+
+class PortfolioInfoManager(SocialManager):
 
     async def create_portfolio_info(self, data: PortfolioInfoSchema):
         values_dict = {
@@ -63,13 +74,36 @@ class PortfolioInfoManager:
         info = PortfolioInfo(
             owner_name=data.owner_name
         )
-        socials = await self.create_socials(data.socials, info)
         async with self.session.begin():
             self.session.add(info)
             await self.session.commit()
-        await self.session.refresh(info, attribute_names=['socials'])
 
         return PortfolioInfoSchema(
-            owner_name=info.owner_name,
-            socials=socials
+            owner_name=info.owner_name
+        )
+
+    async def get_portfolio_info(self) -> Union[PortfolioInfo, None]:
+        query = select(PortfolioInfo)
+        async with self.session.begin():
+            res = await self.session.execute(query)
+            result = res.scalar()
+        return result
+
+    async def update_portfolio_info(self, data: PortfolioInfoSchema):
+        info = await self.get_portfolio_info()
+        if info is None:
+            raise HTTPException(
+                detail='First of all you need to create Portfolio Info!',
+                status_code=400
+            )
+        if data.owner_name == info.owner_name:
+            raise HTTPException(
+                detail='Owner name must be different from the old one!',
+                status_code=400
+            )
+        async with self.session.begin():
+            info.owner_name = data.owner_name
+            await self.session.commit()
+        return PortfolioInfoSchema(
+            owner_name=info.owner_name
         )

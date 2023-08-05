@@ -401,6 +401,8 @@ class UserManager(UserCreationManager,
             return False
         if not Hashing.verify_password(password, user.hashed_password):
             return False
+        if not user.is_active:
+            return False
         return user
 
 
@@ -487,6 +489,18 @@ async def get_active_user(
             detail='User is inactive!',
             status_code=400
         )
+    return current_user
+
+
+async def get_active_owner(
+        current_user: User = Depends(get_active_user)
+):
+    if not current_user.is_owner:
+        raise HTTPException(
+            detail='Only owner can have access to this endpoint!',
+            status_code=403
+        )
+    print(current_user)
     return current_user
 
 
