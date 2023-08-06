@@ -23,3 +23,14 @@ SMTP_PORT = os.environ.get('EMAIL_PORT')
 # CELERY
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq//'
 CELERY_BACKEND_URL = 'amqp://guest:guest@rabbitmq//'
+
+# API KEY
+api_key = os.getenv('API_KEY')
+
+# DEBUG MODE
+DEBUG = os.getenv('DEBUG', True)
+
+if DEBUG == 'True':
+    DEBUG = True
+elif DEBUG == 'False':
+    DEBUG = False

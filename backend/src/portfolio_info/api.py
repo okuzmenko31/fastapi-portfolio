@@ -10,6 +10,7 @@ from .services import PortfolioInfoManager
 from .schemas import (PortfolioInfoSchema,
                       SocialSchema,
                       AllSocialsShow)
+from src.auth.services import get_active_owner
 
 router = APIRouter(
     prefix='/portfolio_info',
@@ -36,7 +37,7 @@ async def get_portfolio_info(
 @router.post('/create/', response_model=PortfolioInfoSchema)
 async def create_portfolio_info(
         data: PortfolioInfoSchema,
-        # owner=Depends(get_active_owner),
+        _owner=Depends(get_active_owner),
         session: AsyncSession = Depends(get_async_session)
 ) -> PortfolioInfoSchema:
     manager = PortfolioInfoManager(session)
@@ -47,6 +48,7 @@ async def create_portfolio_info(
 @router.put('/update/', response_model=PortfolioInfoSchema)
 async def update_portfolio_info(
         data: PortfolioInfoSchema,
+        _owner=Depends(get_active_owner),
         session: AsyncSession = Depends(get_async_session)
 ) -> PortfolioInfoSchema:
     manager = PortfolioInfoManager(session)
@@ -67,6 +69,7 @@ async def get_socials(
 @router.post('/create_social/', response_model=SocialSchema)
 async def create_social(
         data: SocialSchema,
+        _owner=Depends(get_active_owner),
         session: AsyncSession = Depends(get_async_session)
 ) -> SocialSchema:
     manager = PortfolioInfoManager(session)
@@ -84,6 +87,7 @@ async def create_social(
 async def update_social(
         social_id: str,
         data: SocialSchema,
+        _owner=Depends(get_active_owner),
         session: AsyncSession = Depends(get_async_session)
 ) -> SocialSchema:
     manager = PortfolioInfoManager(session)
@@ -94,6 +98,7 @@ async def update_social(
 @router.delete('/delete_social/{social_id}/')
 async def delete_social(
         social_id: str,
+        _owner=Depends(get_active_owner),
         session: AsyncSession = Depends(get_async_session)
 ):
     manager = PortfolioInfoManager(session)

@@ -18,7 +18,8 @@ from .hashing import Hashing
 
 from src.settings.config import (JWT_ALGORITHM,
                                  SECRET_KEY,
-                                 oauth2_scheme)
+                                 oauth2_scheme,
+                                 DEBUG)
 from src.settings.database import get_async_session
 from .token import AuthTokenManager
 
@@ -495,12 +496,12 @@ async def get_active_user(
 async def get_active_owner(
         current_user: User = Depends(get_active_user)
 ):
-    if not current_user.is_owner:
-        raise HTTPException(
-            detail='Only owner can have access to this endpoint!',
-            status_code=403
-        )
-    print(current_user)
+    if not DEBUG:
+        if not current_user.is_owner:
+            raise HTTPException(
+                detail='Only owner can have access to this endpoint!',
+                status_code=403
+            )
     return current_user
 
 
