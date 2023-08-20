@@ -3,16 +3,20 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.exc import IntegrityError
+
 from starlette.responses import JSONResponse
+from starlette import status
 
 from src.settings.config import ACCESS_TOKEN_EXPIRE_MINUTES
 
 from .models import User
 from .services import (UserManager,
-                       JWTTokenManager,
-                       get_active_user,
-                       get_current_user_token,
-                       get_managers, get_active_owner)
+                       JWTTokenManager)
+
+from .dependencies import (get_managers,
+                           get_active_user,
+                           get_current_user_token)
+
 from .token import AuthTokenManager
 from .schemas import (UserCreate,
                       UserShow,
@@ -47,10 +51,10 @@ async def create_user(
         )
         return JSONResponse(content={
             'message': msg
-        }, status_code=200)
+        }, status_code=status.HTTP_200_OK)
     except IntegrityError as error:
         raise HTTPException(detail=f'Database error: {error}',
-                            status_code=503)
+                            status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
 
 
 @router.post('/confirm_email_and_set_active/{token}/{email}/')
@@ -71,12 +75,12 @@ async def confirm_email_and_set_active(
         return JSONResponse(
             content={
                 'detail': 'You successfully registered and confirmed your email!'
-            }, status_code=200
+            }, status_code=status.HTTP_200_OK
         )
     else:
         raise HTTPException(
             detail=token_data.error,
-            status_code=400
+            status_code=status.HTTP_400_BAD_REQUEST
         )
 
 
@@ -85,15 +89,13 @@ async def login_for_access_token(
         data: UserLogin,
         managers: dict = Depends(get_managers)
 ):
+    data_dict = data.model_dump()
     jwt_manager: JWTTokenManager = managers['jwt_token_manager']
-    user = await jwt_manager.authenticate_user(
-        auth_value=data.auth_value,
-        password=data.password
-    )
+    user = await jwt_manager.authenticate_user(**data_dict)
     if not user:
         raise HTTPException(
             detail='Incorrect username/email or password! Or account is not confirmed!',
-            status_code=401,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             headers={"WWW-Authenticate": "Bearer"}
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -112,10 +114,9 @@ async def logout(token: str = Depends(get_current_user_token),
                  managers: dict = Depends(get_managers)):
     manager: JWTTokenManager = managers['jwt_token_manager']
     await manager.add_token_to_blacklist(token)
-    return {
-        'status_code': 200,
+    return JSONResponse(content={
         'detail': 'You successfully logged out!'
-    }
+    }, status_code=status.HTTP_200_OK)
 
 
 @router.get("/me/", response_model=UserShow)
@@ -140,7 +141,7 @@ async def reset_password_request(data: EmailSchema,
     if user is None:
         return JSONResponse(content={
             'error': 'User with provided email does not exists!'
-        }, status_code=400)
+        }, status_code=status.HTTP_400_BAD_REQUEST)
     token_manager: AuthTokenManager = managers['token_manager']
     token_manager.token_type = 'pr'
     msg = await token_manager.send_tokenized_mail(url_main_part='/password_reset/',
@@ -148,7 +149,7 @@ async def reset_password_request(data: EmailSchema,
                                                   router_prefix=router.prefix)
     return JSONResponse(content={
         'success': msg
-    }, status_code=200)
+    }, status_code=status.HTTP_200_OK)
 
 
 @router.put('/password_reset/{token}/{email}/')
@@ -170,11 +171,11 @@ async def reset_password(token: str,
 
         return JSONResponse(content={
             'success': 'Successful password reset!'
-        }, status_code=200)
+        }, status_code=status.HTTP_200_OK)
     else:
         raise HTTPException(
             detail=token_data.error,
-            status_code=400
+            status_code=status.HTTP_400_BAD_REQUEST
         )
 
 
@@ -189,7 +190,7 @@ async def change_password(
 
     return JSONResponse(content={
         'success': 'You successfully changed your password!'
-    }, status_code=200)
+    }, status_code=status.HTTP_200_OK)
 
 
 @router.post('/change_email_request/')
@@ -202,12 +203,12 @@ async def change_email(
     if current_user.email == data.email:
         raise HTTPException(
             detail='You cannot change your email to the one you have now!',
-            status_code=400
+            status_code=status.HTTP_400_BAD_REQUEST
         )
     if await user_manager.check_email_exists(data.email):
         raise HTTPException(
             detail='User with provided email is already exists!',
-            status_code=400
+            status_code=status.HTTP_400_BAD_REQUEST
         )
     token_manager: AuthTokenManager = managers['token_manager']
     token_manager.token_type = 'ce'
@@ -216,7 +217,7 @@ async def change_email(
                                                   router_prefix=router.prefix)
     return JSONResponse(content={
         'success': msg
-    }, status_code=200)
+    }, status_code=status.HTTP_200_OK)
 
 
 @router.put('/change_email_confirmation/{token}/{email}/')
@@ -238,11 +239,11 @@ async def change_email_confirm(
 
         return JSONResponse(content={
             'success': 'You successfully confirmed new email!'
-        }, status_code=200)
+        }, status_code=status.HTTP_200_OK)
     else:
         raise HTTPException(
             detail=token_data.error,
-            status_code=400
+            status_code=status.HTTP_400_BAD_REQUEST
         )
 
 
