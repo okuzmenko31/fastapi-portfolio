@@ -9,7 +9,6 @@ from src.settings.database import Base
 
 class PortfolioInfo(Base):
     __tablename__ = 'portfolio_info'
-
     id: Mapped[uuid.uuid4] = mapped_column(UUID(as_uuid=True),
                                            primary_key=True,
                                            default=uuid.uuid4)
@@ -30,8 +29,10 @@ class Social(Base):
     id: Mapped[uuid.uuid4] = mapped_column(UUID(as_uuid=True),
                                            primary_key=True,
                                            default=uuid.uuid4)
-    portfolio_info_id: Mapped[uuid.uuid4] = mapped_column(ForeignKey('portfolio_info.id'))
-    portfolio_info: Mapped['PortfolioInfo'] = relationship(back_populates='socials')
+    portfolio_info_id: Mapped[uuid.uuid4] = mapped_column(
+        ForeignKey('portfolio_info.id'))
+    portfolio_info: Mapped['PortfolioInfo'] = relationship(
+        back_populates='socials')
     name: Mapped[str] = mapped_column(String(35),
                                       nullable=False)
     link: Mapped[str] = mapped_column(nullable=False)
@@ -48,8 +49,10 @@ class TypeWriterInfo(Base):
                                            default=uuid.uuid4)
     info: Mapped[str] = mapped_column(String(150),
                                       nullable=False)
-    portfolio_info_id: Mapped[uuid.uuid4] = mapped_column(ForeignKey('portfolio_info.id'))
-    portfolio_info: Mapped['PortfolioInfo'] = relationship(back_populates='type_writer_infos')
+    portfolio_info_id: Mapped[uuid.uuid4] = mapped_column(
+        ForeignKey('portfolio_info.id'))
+    portfolio_info: Mapped['PortfolioInfo'] = relationship(
+        back_populates='type_writer_infos')
 
     def __repr__(self):
         return f'Info: {self.info}'

@@ -1,14 +1,17 @@
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 
 from typing import Union
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import exists, and_, select, delete
 
+from src.settings.database import get_async_session
+
 from .models import PortfolioInfo, Social
 from .schemas import (PortfolioInfoSchema,
                       SocialSchema,
                       AllSocialsShow)
+from .exceptions import ExistsException
 
 
 class MainManager:
@@ -19,10 +22,13 @@ class MainManager:
     async def check_exists(
             self,
             model,
-            values_dict: dict
+            values_dict: dict = None,
+            without_values=True
     ):
-        values = (k == v for k, v in values_dict.items())
-        query = exists(model).where(and_(values)).select()
+        query = exists(model).select()
+        if not without_values:
+            values = (k == v for k, v in values_dict.items())
+            query = exists(model).where(and_(values)).select()
         async with self.session.begin():
             res = await self.session.execute(query)
             result = res.scalar()
@@ -52,10 +58,10 @@ class SocialManager(MainManager):
             Social.name: data.name,
             Social.link: data.link
         }
+
         if await self.check_exists(Social, values_dict):
-            raise HTTPException(
-                detail='Social with this name and link is already exists!',
-                status_code=400
+            raise ExistsException(
+                detail='Social with this name and link is already exists!'
             )
         social = Social(
             name=data.name,
@@ -80,9 +86,8 @@ class SocialManager(MainManager):
             Social.link: data.link
         }
         if await self.check_exists(Social, values_dict):
-            raise HTTPException(
-                detail='Please, provide new name and link for this social.',
-                status_code=400
+            raise ExistsException(
+                detail='Please, provide new name and link for this social.'
             )
         async with self.session.begin():
             social.name = data.name
@@ -118,13 +123,18 @@ class SocialManager(MainManager):
 class PortfolioInfoManager(SocialManager):
 
     async def create_portfolio_info(self, data: PortfolioInfoSchema):
+        if await self.check_exists(PortfolioInfo):
+            raise ExistsException(
+                detail='You can\'t create more than 1 portfolio info.'
+                ' Delete current portfolio info to create new.'
+            )
+
         values_dict = {
             PortfolioInfo.owner_name: data.owner_name
         }
         if await self.check_exists(PortfolioInfo, values_dict):
-            raise HTTPException(
-                detail='Portfolio Info with this owner is already exists!',
-                status_code=400
+            raise ExistsException(
+                detail='Portfolio Info with this owner is already exists!'
             )
         info = PortfolioInfo(
             owner_name=data.owner_name
@@ -162,3 +172,15 @@ class PortfolioInfoManager(SocialManager):
         return PortfolioInfoSchema(
             owner_name=info.owner_name
         )
+
+    async def delete_portfolio_info(self):
+        stmt = delete(PortfolioInfo)
+        async with self.session.begin():
+            await self.session.execute(stmt)
+            await self.session.commit()
+
+
+async def portfolio_info_manager(
+        session: AsyncSession = Depends(get_async_session)
+):
+    return PortfolioInfoManager(session=session)

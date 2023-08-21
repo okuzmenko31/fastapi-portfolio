@@ -1,16 +1,16 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from fastapi.routing import APIRouter
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
+from starlette import status
 
-from src.settings.database import get_async_session
+from src.auth.dependencies import get_active_owner
 
-from .services import PortfolioInfoManager
+from .services import PortfolioInfoManager, portfolio_info_manager
 from .schemas import (PortfolioInfoSchema,
                       SocialSchema,
                       AllSocialsShow)
-from src.auth.services import get_active_owner
+from .exceptions import PortfolioInfoDoesNotExists
 
 router = APIRouter(
     prefix='/portfolio_info',
@@ -20,15 +20,11 @@ router = APIRouter(
 
 @router.get('', response_model=PortfolioInfoSchema)
 async def get_portfolio_info(
-        session: AsyncSession = Depends(get_async_session)
+        manager: PortfolioInfoManager = Depends(portfolio_info_manager)
 ):
-    manager = PortfolioInfoManager(session)
     info = await manager.get_portfolio_info()
     if info is None:
-        raise HTTPException(
-            detail='Portfolio Info isn\'t created! Create it please.',
-            status_code=400
-        )
+        raise PortfolioInfoDoesNotExists
     return PortfolioInfoSchema(
         owner_name=info.owner_name
     )
@@ -38,9 +34,8 @@ async def get_portfolio_info(
 async def create_portfolio_info(
         data: PortfolioInfoSchema,
         _owner=Depends(get_active_owner),
-        session: AsyncSession = Depends(get_async_session)
+        manager: PortfolioInfoManager = Depends(portfolio_info_manager)
 ) -> PortfolioInfoSchema:
-    manager = PortfolioInfoManager(session)
     info = await manager.create_portfolio_info(data)
     return info
 
@@ -49,18 +44,26 @@ async def create_portfolio_info(
 async def update_portfolio_info(
         data: PortfolioInfoSchema,
         _owner=Depends(get_active_owner),
-        session: AsyncSession = Depends(get_async_session)
+        manager: PortfolioInfoManager = Depends(portfolio_info_manager)
 ) -> PortfolioInfoSchema:
-    manager = PortfolioInfoManager(session)
     info = await manager.update_portfolio_info(data)
     return info
 
 
+@router.delete('/delete/')
+async def delete_portfolio_info(
+    manager: PortfolioInfoManager = Depends(portfolio_info_manager)
+):
+    await manager.delete_portfolio_info()
+    return JSONResponse(content={
+        'detail': 'Portfolio info was successfully deleted!'
+    }, status_code=status.HTTP_200_OK)
+
+
 @router.get('/socials/', response_model=AllSocialsShow)
 async def get_socials(
-        session: AsyncSession = Depends(get_async_session)
+        manager: PortfolioInfoManager = Depends(portfolio_info_manager)
 ) -> AllSocialsShow:
-    manager = PortfolioInfoManager(session)
     info = await manager.get_portfolio_info()
     socials = await manager.get_socials(info)
     return socials
@@ -70,15 +73,11 @@ async def get_socials(
 async def create_social(
         data: SocialSchema,
         _owner=Depends(get_active_owner),
-        session: AsyncSession = Depends(get_async_session)
+        manager: PortfolioInfoManager = Depends(portfolio_info_manager)
 ) -> SocialSchema:
-    manager = PortfolioInfoManager(session)
     info = await manager.get_portfolio_info()
     if info is None:
-        raise HTTPException(
-            detail='First of all you need to create a Portfolio Info!',
-            status_code=400
-        )
+        raise PortfolioInfoDoesNotExists
     social = await manager.create_social(data, info)
     return social
 
@@ -88,9 +87,8 @@ async def update_social(
         social_id: str,
         data: SocialSchema,
         _owner=Depends(get_active_owner),
-        session: AsyncSession = Depends(get_async_session)
+        manager: PortfolioInfoManager = Depends(portfolio_info_manager)
 ) -> SocialSchema:
-    manager = PortfolioInfoManager(session)
     social = await manager.update_social(data, social_id)
     return social
 
@@ -99,12 +97,11 @@ async def update_social(
 async def delete_social(
         social_id: str,
         _owner=Depends(get_active_owner),
-        session: AsyncSession = Depends(get_async_session)
+        manager: PortfolioInfoManager = Depends(portfolio_info_manager)
 ):
-    manager = PortfolioInfoManager(session)
     await manager.delete_social(social_id)
     return JSONResponse(
         content={
             'success': 'You successfully deleted this social!'
-        }, status_code=200
+        }, status_code=status.HTTP_200_OK
     )
