@@ -6,7 +6,7 @@ import sqlalchemy.types as types
 from enum import Enum
 
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship, backref
 from sqlalchemy import String, DateTime, func
 
 from src.settings.database import Base
@@ -34,6 +34,7 @@ class User(Base):
     roles: Mapped[list] = mapped_column(ARRAY(String),
                                         default=[Roles.role_visitor],
                                         nullable=False)
+    posts = relationship('Post', back_populates='author', lazy='subquery')
 
     def __repr__(self):
         return f'User: {self.username}'

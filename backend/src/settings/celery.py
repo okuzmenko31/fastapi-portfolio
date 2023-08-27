@@ -4,7 +4,11 @@ from celery import Celery
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-from .config import *
+from .config import (SMTP_USERNAME,
+                     SMTP_PASSWORD,
+                     SMTP_USER,
+                     SMTP_PORT,
+                     SMTP_HOST)
 
 app = Celery(__name__)
 app.config_from_object('src.settings.config', namespace='CELERY')
